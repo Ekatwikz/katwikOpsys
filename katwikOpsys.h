@@ -1645,60 +1645,6 @@ replaceBrace:
 			fgets(line1, MAX_EXEC_LINE, execToFile);
 			fgets(line2, MAX_EXEC_LINE, execToFile);
 			myAddr2LinePrinter(stream, line1, line2, oflag);
-
-#if TEMP_REMOVE
-			fprintf(stream, VIOLET_BLD"\t");
-			for (int ch, secondLine = 0, lineNumberPrinted = 0, done = 0;
-					!done
-					//&& i < ranOutOfSpaceAt
-					&& !feof(execToFile); // TODO: make this better lol
-			    ) {
-				ch = fgetc(execToFile);
-				switch (ch) {
-					case '\n':
-						{
-							if (secondLine) {
-								fprintf(stream, RESET_ESC"\n");
-								done = 1;
-							} else {
-								fprintf(stream, BWHITE" ()" RESET_ESC"\n\tfrom " GREEN_BLD);
-								secondLine = 1;
-							}
-							break;
-						}
-					case ':':
-						{
-							if (secondLine) {
-								fprintf(stream, RESET_ESC":" YELLLOW);
-								lineNumberPrinted = 1;
-							} else {
-								fputc(ch, stream);
-							}
-							break;
-						}
-					case '(':
-						{
-							if (lineNumberPrinted) {
-								// for printing discriminator thingy?
-								fprintf(stream, RESET_ESC"(");
-							} else {
-								fputc(ch, stream);
-							}
-							break;
-						}
-						/*
-						   case EOF: // ??
-						   break;
-						   */
-					default:
-						{
-							fputc(ch, stream);
-							break;
-						}
-				}
-			}
-			fprintf(stream, RESET_ESC);
-#endif // TEMP_REMOVE
 		}
 	}
 
