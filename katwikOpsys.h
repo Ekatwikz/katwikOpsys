@@ -2266,16 +2266,15 @@ void* MY_NON_NULL(1)
 char* MY_NON_NULL(1)
 	removeNewline(char* str) {
 		// keep a copy to return? idk
-		for (char* ret = str;; ++str) { // lol
-			if ('\0' == *str) {
-				return ret;
-			}
-
+		char* ret = str;
+		for (; *str; ++str) { // lol
 			if ('\n' == *str && '\0' == *(str + 1)) {
 				*str = '\0';
-				return ret;
+				break;
 			}
 		}
+
+		return ret;
 	}
 
 #define SIGEV_INFO_FORMAT "{notify:%d signo:%d value:{int:%d ptr:%p} funct:%p attr:%p tid:%ld}"
