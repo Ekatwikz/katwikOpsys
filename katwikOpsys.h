@@ -174,22 +174,6 @@
 #define LIST_TYPE int
 #endif // LIST_TYPE
 
-// unused so far, TODO: implement this lol
-#ifndef HEADER_DEV
-#define HEADER_DEV 0
-#elif HEADER_DEV == 1
-#if MUNDANE_MESSAGES
-#pragma message "Development mode for this header has been manually enabled"
-#endif // MUNDANE_MESSAGES
-#elif HEADER_DEV == 0
-#if MUNDANE_MESSAGES
-#pragma message "Development mode for this header has been manually disabled"
-#endif // MUNDANE_MESSAGES
-#else
-#pragma GCC error "HEADER_DEV macro bad value.\nValid values are 0 (allowed) or 1 (disallowed)"
-#undef HEADER_OKAY
-#endif // HEADER_DEV
-
 #ifndef TRACE_ON_ERR
 #define TRACE_ON_ERR 1
 #elif TRACE_ON_ERR == 1
@@ -676,13 +660,6 @@
  * @see ATTRIBUTES_ALLOWED
  */
 #define RETURN_ERR
-
-/**
- * @def HEADER_DEV
- * @brief unused for now
- * will probably be for some development feature stuff
- */
-#define HEADER_DEV
 /**@}*/
 
 /** \defgroup general_functions General Functions
@@ -1668,60 +1645,6 @@ replaceBrace:
 			fgets(line1, MAX_EXEC_LINE, execToFile);
 			fgets(line2, MAX_EXEC_LINE, execToFile);
 			myAddr2LinePrinter(stream, line1, line2, oflag);
-
-#if TEMP_REMOVE
-			fprintf(stream, VIOLET_BLD"\t");
-			for (int ch, secondLine = 0, lineNumberPrinted = 0, done = 0;
-					!done
-					//&& i < ranOutOfSpaceAt
-					&& !feof(execToFile); // TODO: make this better lol
-			    ) {
-				ch = fgetc(execToFile);
-				switch (ch) {
-					case '\n':
-						{
-							if (secondLine) {
-								fprintf(stream, RESET_ESC"\n");
-								done = 1;
-							} else {
-								fprintf(stream, BWHITE" ()" RESET_ESC"\n\tfrom " GREEN_BLD);
-								secondLine = 1;
-							}
-							break;
-						}
-					case ':':
-						{
-							if (secondLine) {
-								fprintf(stream, RESET_ESC":" YELLLOW);
-								lineNumberPrinted = 1;
-							} else {
-								fputc(ch, stream);
-							}
-							break;
-						}
-					case '(':
-						{
-							if (lineNumberPrinted) {
-								// for printing discriminator thingy?
-								fprintf(stream, RESET_ESC"(");
-							} else {
-								fputc(ch, stream);
-							}
-							break;
-						}
-						/*
-						   case EOF: // ??
-						   break;
-						   */
-					default:
-						{
-							fputc(ch, stream);
-							break;
-						}
-				}
-			}
-			fprintf(stream, RESET_ESC);
-#endif // TEMP_REMOVE
 		}
 	}
 
@@ -1735,109 +1658,6 @@ replaceBrace:
 	fflush(stream);
 	FREE(traceStrings);
 }
-
-// this next bit is a janky old version lol
-#if TEMP_REMOVE
-#if EXEC_ALLOWED
-#define TRACE_EXEC_STUFF(stream, traceString) do {\
-	/* extra char for '\0' */\
-	char execBuffer[MAX_EXEC_STR + 1] = {0};\
-	char *addr = traceString,\
-	*curr = traceString;\
-	/* we do a little choppin */\
-	do {\
-		if (*curr == '(') {\
-			*curr = '\0';\
-			addr = ++curr;\
-			break;\
-		}\
-		++curr;\
-	} while (1);\
-	do {\
-		if (*curr == ')') {\
-			*curr = '\0';\
-			break;\
-		}\
-		++curr;\
-	} while (1);\
-	snprintf(execBuffer, MAX_EXEC_STR, "addr2line -f -e %s %s; echo lol", traceString, addr);\
-\
-	FILE* execToFile;\
-	if (NULL == (execToFile = popen(execBuffer, "r"))) {\
-		fprintf(stream, "[Can't popen]\n");\
-		break;\
-	}\
-\
-	/* omg the amount of cheap hacks lmfao */\
-	fprintf(stream, VIOLET_BLD);\
-	for (int ch, secondLine = 0, lineNumberPrinted = 0; !feof(execToFile);) {\
-		ch = fgetc(execToFile);\
-		switch(ch) {\
-			case '\n':\
-				  {\
-					  if (secondLine) {\
-						  fprintf(stream, RESET_ESC"\n");\
-					  } else {\
-						  fprintf(stream, BWHITE" ()" RESET_ESC"\n\tin " GREEN_BLD);\
-						  secondLine = 1;\
-					  }\
-					  break;\
-				  }\
-			case ':':\
-				 {\
-					 if (secondLine) {\
-						 fprintf(stream, RESET_ESC":" YELLLOW);\
-						 lineNumberPrinted = 1;\
-					 } else {\
-						 fputc(ch, stream);\
-					 }\
-					 break;\
-				 }\
-			case '(':\
-				 {\
-					 if (lineNumberPrinted) {\
-						 fprintf(stream, RESET_ESC"(");\
-					 } else {\
-						 fputc(ch, stream);\
-					 }\
-					 break;\
-				 }\
-			case EOF:\
-				break;\
-			default: {\
-					 fputc(ch, stream);\
-					 break;\
-				 }\
-		}\
-	}\
-	fprintf(stream, RESET_ESC);\
-	if (pclose(execToFile) == -1) {\
-		fprintf(stream, "[Can't pclose]\n");\
-		break;\
-	}\
-} while(0)
-#else // EXEC_ALLOWED
-#define TRACE_EXEC_STUFF(stream)
-#endif // EXEC_ALLOWED
-#define PRINT_STACK_TRACE(stream) do {\
-	void* traceBuffer[MAX_TRACE];\
-	int size = backtrace(traceBuffer, MAX_TRACE);\
-	char** traceStrings = backtrace_symbols(traceBuffer, size);\
-	fprintf(stream, LBLUE"Call stack trace"RESET_ESC);\
-	if (NULL == traceStrings) {\
-		fprintf(stream, LRED_BLD" [Couldn't backtrace]\n"RESET_ESC);\
-	} else {\
-		fprintf(stream, ", Top %d frames from top to bottom:\n", size);\
-		fprintf(stream, "(Line numbers in the trace are sometimes slightly inaccurate for now)\n");\
-		for (int i = 0; i < size; ++i) {\
-			fprintf(stream, BWHITE"#%d\t" RESET_ESC" %s\n\t"RESET_ESC, i, traceStrings[i]);\
-			TRACE_EXEC_STUFF(stream, traceStrings[i]);\
-		}\
-	}\
-	fflush(stream);\
-	FREE(traceStrings);\
-} while(0)
-#endif // TEMP_REMOVE
 
 #if TRACE_ON_ERR
 #define ERR_STACK_TRACE() myStackTracer(stderr, TRUNCATE_ALOT); fprintf(stderr, "\n")
@@ -2220,13 +2040,6 @@ void waitAllChildren(void) {
 	for (pid_t pid; true;) {
 		// error check except ECHILD:
 		ERR_NEG1_(pid = waitpid(-1, NULL, 0) , ECHILD);
-
-#if DEBUG_MODE
-		DBGprintf(BWHITE"pid:%06ld (after " DBLUE"%d" BWHITE" waitpid calls)\n",
-				(long) pid, ++i
-			 );
-#endif // DEBUG_MODE
-
 		if (errno == ECHILD) break;
 	}
 }
@@ -2236,10 +2049,6 @@ void myNanoSleep (long nanoseconds) {
 	/*
 	 * nanosleeps for the given nanoseconds
 	 */
-
-	DBGonly("ns:%ld\n",
-			nanoseconds
-	       );
 
 	struct timespec time;
 	time.tv_sec = nanoseconds / GIGA; // int division
@@ -2252,10 +2061,6 @@ void myNanoSleep (long nanoseconds) {
 			; returnState;) {
 		// error check except EINTR:
 		ERR_NEG1_(returnState = nanosleep(&time, &time) , EINTR);
-
-		DBGonly("ret:%d, timespec:{s:%ld ns:%ld} (after %d nanosleep calls)\n",
-				returnState, time.tv_sec, time.tv_nsec, ++i
-		       );
 	}
 }
 
@@ -2276,10 +2081,6 @@ void myNanoSleep2(time_t seconds, long nanoseconds) {
 			; returnState;) {
 		// error check except EINTR:
 		ERR_NEG1_(returnState = nanosleep(&time, &time) , EINTR);
-
-		DBGonly("ret:%d, timespec:{s:%ld ns:%ld} (after %d nanosleep calls)\n",
-				returnState, time.tv_sec, time.tv_nsec, ++i
-		       );
 	}
 }
 
@@ -2294,10 +2095,6 @@ int MY_NON_NULL(2)
 		do {
 			// error check except EINTR:
 			ERR_NEG1_(returnState = read(fildes, buf, nbyte), EINTR);
-
-			DBGonly("ret:%d (after %d read calls)\n",
-					returnState, ++i
-			       );
 		} while (returnState == -1);
 
 		return returnState;
@@ -2314,10 +2111,6 @@ int MY_NON_NULL(2)
 		do {
 			// error check except EINTR:
 			ERR_NEG1_(returnState = write(fildes, buf, nbyte), EINTR);
-
-			DBGonly("ret:%d (after %d write calls)\n",
-					returnState, ++i
-			       );
 		} while (returnState == -1);
 
 		return returnState;
@@ -2335,15 +2128,6 @@ MY_NON_NULL(3)
 #endif // USE_RAND_R
 	      ) {
 		// TODO: add seed check for if attributes aren't allowed
-#if USE_RAND_R
-		DBGonly("min:%ld max:%ld seed:%p\n",
-				min, max, (void*) seed
-		       );
-#else // USE_RAND_R
-		DBGonly("min:%ld max:%ld\n",
-				min, max
-		       );
-#endif // USE_RAND_R
 
 		return min +
 #if USE_RAND_R
@@ -2363,15 +2147,6 @@ MY_NON_NULL(3)
 			, unsigned int* seed
 #endif // USE_RAND_R
 		    ) {
-#if USE_RAND_R
-		DBGonly("min:%lf max:%lf seed:%p\n",
-				min, max, (void*) seed
-		       );
-#else // USE_RAND_R
-		DBGonly("min:%lf max:%lf\n",
-				min, max
-		       );
-#endif // USE_RAND_R
 
 		return min + (
 #if USE_RAND_R
@@ -2391,16 +2166,6 @@ MY_NON_NULL(3)
 			, unsigned int* seed
 #endif // USE_RAND_R
 		   ) {
-#if USE_RAND_R
-		DBGonly("minSec:%lf maxSec:%lf seed:%p\n",
-				minSec, maxSec, (void*) seed
-		       );
-#else // USE_RAND_R
-		DBGonly("minSec:%lf maxSec:%lf\n",
-				minSec, maxSec
-		       );
-#endif // USE_RAND_R
-
 		myNanoSleep(myRand(minSec * GIGA, maxSec * GIGA
 #if USE_RAND_R
 					, seed
@@ -2409,22 +2174,13 @@ MY_NON_NULL(3)
 	}
 
 void printBuf(char* buffer, size_t sz) {
-	DBGonly("buffer:%p sz:%zd\n",
-			(void*) buffer, sz
-	       );
-
 	write_(STDOUT_FILENO, buffer, sz);
 	printf_("\n");
 }
 
 void* MY_NON_NULL(1, 2)
 	substr(char* dest, char* src, off_t start, size_t length) {
-		DBGonly("dest:%s src:%s start:%ld length:%ld",
-				dest, src, start, length
-		       );
-
-		// TODO: should this be an int function?
-		// maybe I shouldn't call err here and just return an error code
+		// TODO: just remove this lol
 		if (
 #if !ATTRIBUTES_ALLOWED
 				dest == NULL || src == NULL || // wtf??? that's a separte check anyway, no? lmfao
@@ -2450,9 +2206,6 @@ void* MY_NON_NULL(1, 2)
 
 void* MY_NON_NULL(1)
 	leftShift_fill(void* buff, size_t length, size_t amount, int c) {
-		DBGonly("buff:%p length:%ld amount:%ld c:(int) %d",
-				buff, (long) length, (long) amount, c
-		       );
 		memmove(buff, ((int8_t*) buff) + amount, length - amount);
 		memset(((int8_t*) buff) + length - amount, c, amount);
 
@@ -2496,7 +2249,7 @@ void* MY_NON_NULL(1)
 		ERR_NULL(tmp = malloc(amount));
 		memcpy(tmp, ((int8_t*) buff) + length - amount, amount);
 		memmove(&((int8_t*) buff)[amount], buff, length - amount);
-		//memcpy(buff, tmp, amount);
+		memcpy(buff, tmp, amount);
 		FREE(tmp);
 		return buff;
 	}
@@ -2510,32 +2263,29 @@ void* MY_NON_NULL(1)
 		return str;
 	}
 
+char* MY_NON_NULL(1)
+	removeNewline(char* str) {
+		// keep a copy to return? idk
+		for (char* ret = str;; ++str) { // lol
+			if ('\0' == *str) {
+				return ret;
+			}
+
+			if ('\n' == *str && '\0' == *(str + 1)) {
+				*str = '\0';
+				return ret;
+			}
+		}
+	}
+
 #define SIGEV_INFO_FORMAT "{notify:%d signo:%d value:{int:%d ptr:%p} funct:%p attr:%p tid:%ld}"
 
+// TODO: this MIGHT_ERR stuff has to go lol
 MIGHT_ERR()
 	init_notification(struct sigevent* notification, int notify, int signo, int sival_int, void* sival_ptr,
 			void (*notify_function) (union sigval), void* notify_attributes) {
-#if TEMP_REMOVE
-		// TODO: maybe some if statements, to make this kinda thing work?
-		// TODO: or maybe not? lmfao?
-
-		// btw man 7 sigevent tells lies? lmao
-		// there's no sigevent.sigev_notify_thread_id ??
-		DBGonly("params: " SIGEV_INFO_FORMAT "%d %d %d %p %p %p\n",
-				notification->sigev_notify, notification->sigev_signo,
-				notification->sigev_value.sival_int, (void*) notification->sigev_value.sival_ptr,
-				(void*) notification->sigev_notify_function, (void*) notification->sigev_notify_attributes,
-				(long) notification->_sigev_un._tid
-
-				, notify, signo, sival_int, sival_ptr, (void*) notify_function, (void*) notify_attributes
-		       );
-#endif // TEMP_REMOVE
-		DBGonly("notification:%p notify:%d signo:%d sival_int:%d sival_ptr:%p notify_function:%p notify_attributes:%p\n",
-				(void*) notification,
-				notify, signo, sival_int, sival_ptr, (void*) notify_function, notify_attributes
-		       );
-
 		if (sival_int && sival_ptr) {
+			// eww
 			RETURN_FAIL(LBLUE"sival_int" RESET_ESC" (" DBLUE"arg 4" RESET_ESC") passed "
 					LRED_BLD"and" LBLUE" sival_ptr" RESET_ESC" (" DBLUE"arg 5" RESET_ESC") passed.\n"
 					"(They are members of a union. Only pass one)");
@@ -2598,31 +2348,6 @@ struct sigevent MY_WARN_UNUSED
 MIGHT_ERR()
 	init_aiocb(struct aiocb* cbp, int fildes, off_t offset, ssize_t nbytes, volatile void* aio_buf,
 			struct sigevent* notification) {
-#if TEMP_REMOVE
-		DBGonly("params: " AIOCB_INFO_FORMAT " %d %ld %zd %p " SIGEV_INFO_FORMAT "\n",
-				cbp->aio_fildes, cbp->aio_offset, (void*) cbp->aio_buf, cbp->aio_nbytes, cbp->aio_reqprio,
-
-				cbp->aio_sigevent.sigev_notify, cbp->aio_sigevent.sigev_signo,
-				cbp->aio_sigevent.sigev_value.sival_int, (void*) cbp->aio_sigevent.sigev_value.sival_ptr,
-				(void*) cbp->aio_sigevent.sigev_notify_function, (void*) cbp->aio_sigevent.sigev_notify_attributes,
-				(long) cbp->aio_sigevent._sigev_un._tid,
-
-				cbp->aio_lio_opcode,
-
-				fildes, offset, nbytes, (void*) aio_buf,
-
-				notification->sigev_notify, notification->sigev_signo,
-				notification->sigev_value.sival_int, (void*) notification->sigev_value.sival_ptr,
-				(void*) notification->sigev_notify_function, (void*) notification->sigev_notify_attributes,
-				(long) notification->_sigev_un._tid
-		       );
-#endif // TEMP_REMOVE
-		DBGonly("cbp:%p fildes:%d offset:%ld nbytes:%zd aio_buf:%p notification:%p\n",
-				(void*) cbp,
-				fildes, offset, nbytes, (void*) aio_buf,
-				(void*) notification
-		       );
-
 		memset(cbp, 0, sizeof(struct aiocb));
 
 		cbp->aio_fildes = fildes;
@@ -2649,14 +2374,7 @@ MIGHT_ERR()
 	}
 
 void suspend(struct aiocb* cbp) {
-	DBGonly("cbp:%p\n",
-			(void*) cbp
-	       );
-
-	//struct aiocb* cbpContainer[1]; // wtf was this shit lmfao
-	//cbpContainer[0] = cbp;
-
-	// todo: replace with myRetry lul
+	// TODO: replace with CHECK_RETRY ?
 	for (int ret = -1; ret;) {
 		// error check except EINTR:
 		ERR_NEG1_(ret = aio_suspend((const struct aiocb* const*) &cbp, 1, NULL) , EINTR);
@@ -2667,6 +2385,7 @@ void suspend(struct aiocb* cbp) {
 }
 
 // shouldRead macros
+// ?? TODO: change this too lol
 #define WRITE false
 #define READ true
 
@@ -2678,13 +2397,6 @@ MIGHT_ERR() MY_NON_NULL(5)
 		 * with freshly initialized (or allocated+init, if not provided) aiocbs
 		 * if no notification method is provided, it also suspends until they're all done
 		 */
-
-		DBGonly("aioArr:%p fildes:%d offset:%ld blockSize:%zd buf:%p notification:%p parrLevel:%d shouldRead:%d\n",
-				(void*) aioArr,
-				fildes, offset, blockSize, (void*) buf,
-				(void*) notification,
-				parrLevel, shouldRead
-		       );
 
 		bool arrNotPassed = false;
 		if (!aioArr) {
@@ -2732,222 +2444,6 @@ MIGHT_ERR() MY_NON_NULL(5)
 
 		RETURN_OKAY;
 	}
-
-// the entire section below this is kinda buggy
-// I sometimes get an infinite loop due to EAGAIN, sometimes not. idk.
-#if TEMP_REMOVE
-#define LINKS_DEPRECATED_MSG "I've gotten some bugs using the Link functions to read, especially with MKFIFO mode, otherwise they kiiinda work?"
-
-// represents descriptors of either pipe/fifo for use with moi Link functions
-MY_DEPRECATE(LINKS_DEPRECATED_MSG)
-	typedef struct _Link {
-		// descriptors:
-		int AtoB[2];
-		int BtoA[2];
-
-		// if initLink allocates memory for this struct, then the header
-		// should be responsible for releasing it at the right time too
-		bool freeOnClose;
-
-		// closeLink will remove fifo if this flag is true
-		bool removeOnClose;
-
-		// paths, should only be used by removeOnClose
-		const char* AtoBfifo;
-		const char* BtoAfifo;
-	} Link;
-
-#define JUSTINIT 0
-#define PIPE 1
-#define FIFO 2
-#define MKFIFO 3
-
-#define ALLOC true
-#define NOALLOC false
-
-#define REMOVE true
-#define NOREMOVE false
-
-#define LINK_WR 1
-#define LINK_RD 0
-
-// TODO: make this void and add switch for RETURN_ERR
-MY_DEPRECATE(LINKS_DEPRECATED_MSG)
-	void* initLink(Link* link, int initType, bool shouldAlloc,
-			// ignored if initType isn't JUSTINIT:
-			int AtoB_READ, int AtoB_WRITE, int BtoA_READ, int BtoA_WRITE,
-
-			// ignored if initType isn't MKFIFO/FIFO:
-			const char* AtoBfifo, const char* BtoAfifo, mode_t fifoMode, bool removeOnClose) {
-		if (NULL == link && !shouldAlloc) {
-			errno = MY_ERRNO;
-			// TODO: make this error cool too
-			ERR("pepega no link but no want malloc");
-		}
-
-		if ( (FIFO == initType || MKFIFO == initType)
-				&& (NULL == AtoBfifo || NULL == BtoAfifo) ) {
-			errno = MY_ERRNO;
-			// TODO: make this error cool too
-			ERR("fifo with no fifo? lul");
-		}
-
-		if (shouldAlloc)
-			ERR_NULL(link = calloc(1, sizeof(Link)));
-		link->freeOnClose = true;
-
-		switch (initType) {
-			case MKFIFO:
-				{
-					// error check except EEXIST:
-					ERR_NEG1_(mkfifo(AtoBfifo, fifoMode) , EEXIST);
-					ERR_NEG1_(mkfifo(BtoAfifo, fifoMode) , EEXIST);
-
-					goto fifo; // or else Wimplicit-fallthrough :(
-				}
-			case FIFO:
-fifo:
-				{
-					// first check if these files are fifos lol
-					struct stat statBuf;
-
-					ERR_NEG1(stat(AtoBfifo, &statBuf));
-					if (!S_ISFIFO(statBuf.st_mode)) {
-						errno = MY_ERRNO;
-						ERR("bruh AtoB not a fifo");
-					}
-
-					ERR_NEG1(stat(BtoAfifo, &statBuf));
-					if (!S_ISFIFO(statBuf.st_mode)) {
-						errno = MY_ERRNO;
-						ERR("bruh BtoA not a fifo");
-					}
-
-					link->AtoBfifo = AtoBfifo;
-					link->BtoAfifo = BtoAfifo;
-
-					link->removeOnClose = removeOnClose;
-
-					// nonblock b/c we're setting everything up at once:
-					// pretty sure this is the source of the bugs tho :(
-					ERR_NEG1(link->AtoB[LINK_RD] = open(AtoBfifo, O_RDONLY | O_NONBLOCK));
-					ERR_NEG1(link->AtoB[LINK_WR] = open(AtoBfifo, O_WRONLY | O_NONBLOCK));
-
-					ERR_NEG1(link->BtoA[LINK_RD] = open(BtoAfifo, O_RDONLY | O_NONBLOCK));
-					ERR_NEG1(link->BtoA[LINK_WR] = open(BtoAfifo, O_WRONLY | O_NONBLOCK));
-
-					break;
-				}
-			case PIPE:
-				{
-					ERR_NEG1(pipe(link->AtoB));
-					ERR_NEG1(pipe(link->BtoA));
-
-					break;
-				}
-			case JUSTINIT:
-				{
-					link->AtoB[LINK_WR] = AtoB_WRITE;
-					link->AtoB[LINK_RD] = AtoB_READ;
-
-					link->BtoA[LINK_WR] = BtoA_WRITE;
-					link->BtoA[LINK_RD] = BtoA_READ;
-
-					break;
-				}
-			default:
-				{
-					errno = MY_ERRNO;
-					// TODO: make error look cool lol
-					ERR("pepeg initType");
-				}
-		}
-
-		// mainly for if shouldAlloc
-		return link;
-	}
-
-#define A true
-#define B false
-
-// TODO: add switch for RETURN_ERR
-MIGHT_ERR() MY_NON_NULL(1)
-	closeUseless(Link* link, bool fromA) {
-		NON_ATTR_IF (NULL == link) {
-			RETURN_FAIL("pepega no link");
-		}
-
-		if (fromA) {
-			ERR_NEG1(close(link->AtoB[LINK_RD]));
-			ERR_NEG1(close(link->BtoA[LINK_WR]));
-		} else {
-			ERR_NEG1(close(link->BtoA[LINK_RD]));
-			ERR_NEG1(close(link->AtoB[LINK_WR]));
-		}
-	}
-
-// TODO: add switch for RETURN_ERR
-MIGHT_ERR() MY_NON_NULL(1)
-	closeLink(Link* link, bool fromA) {
-		/*
-		 * this assumes closeUseless was called at some point earlier,
-		 * otherwise some descriptors will remain open
-		 */
-
-		NON_ATTR_IF (NULL == link) {
-			RETURN_FAIL("pepega no link");
-		}
-
-		if (fromA) {
-			ERR_NEG1(close(link->BtoA[LINK_RD]));
-			ERR_NEG1(close(link->AtoB[LINK_WR]));
-		} else {
-			ERR_NEG1(close(link->AtoB[LINK_RD]));
-			ERR_NEG1(close(link->BtoA[LINK_WR]));
-		}
-
-		// this is also hilariously dumb btw lmao, 1 closeLink from each side would double-delete?
-		if (link->removeOnClose) {
-			ERR_NEG1(remove(link->AtoBfifo));
-			ERR_NEG1(remove(link->BtoAfifo));
-		}
-
-		if (link->freeOnClose)
-			FREE(link);
-
-		RETURN_OKAY;
-	}
-
-MIGHT_ERR() MY_NON_NULL(1) MY_DEPRECATE(LINKS_DEPRECATED_MSG)
-	linkIO(Link* link, void* buffer, size_t nbyte, bool fromA, bool shouldWrite) {
-
-		NON_ATTR_IF (NULL == link) {
-			RETURN_FAIL("pepega no link");
-		}
-
-		errno = 0; // ? holy shit what was I even doing
-		if (fromA) {
-			if (shouldWrite)
-				ERR_NEG1(write(link->AtoB[LINK_WR], buffer, nbyte));
-			else while(true) {
-				ERR_NEG1_(read(link->BtoA[LINK_RD], buffer, nbyte) , EAGAIN);
-				if (errno != EAGAIN) break;
-			}
-
-		} else {
-
-			if (shouldWrite)
-				ERR_NEG1(write(link->BtoA[LINK_WR], buffer, nbyte));
-			else while(true) {
-				ERR_NEG1_(read(link->AtoB[LINK_RD], buffer, nbyte) , EAGAIN); 
-				if (errno != EAGAIN) break;
-			}
-		}
-
-		RETURN_OKAY;
-	}
-
-#endif // TEMP_REMOVE
 
 typedef struct MyNode_ {
 	LIST_TYPE val;
