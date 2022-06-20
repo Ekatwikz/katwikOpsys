@@ -1409,7 +1409,7 @@ MyList* insertValFirst(MyList* const list, LIST_TYPE newVal);
 #endif // ANSI_COLOR_FIESTA
 
 //  requires:
-//  __FILE__, __LINE__, __func__, pid, ppid
+//  __FILE__, __LINE__, __func__, pid, ppid, tid
 #define INFO_FORMAT GREEN_BLD"%s" RESET_ESC":" YELLLOW"%d"\
 		RESET_ESC" in " VIOLET_BLD"%s" RESET_ESC", PID:"\
 		BWHITE"%06ld" RESET_ESC" PPID:" BWHITE"%06ld"\
