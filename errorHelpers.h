@@ -13,7 +13,7 @@
 
 #include "options.h"
 #include "colors.h"
-#include "extraAttr.h"
+#include "easyAttr.h"
 #include "littleHelpers.h"
 
 //  requires:
@@ -63,7 +63,7 @@ static void MY_NON_NULL(1, 2, 3)
 		}
 
 		fprintf(stream, VIOLET_BLD"\t");
-		// lmfao wtf?? print the ling char by char just to ignore the '\n'??
+		// lmfao wtf?? print the line char by char just to ignore the '\n'??
 		// lmao make this better
 		for (char* curr = line1; *curr && *curr != '\n'; ++curr) {
 			fputc(*curr, stream);

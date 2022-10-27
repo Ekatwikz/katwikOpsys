@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-#include "extraAttr.h"
+#include "easyAttr.h"
 
 // big number
 #define GIGA 1000000000L

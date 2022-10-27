@@ -1,9 +1,9 @@
-#ifndef EXTRA_ATTR_H
-#define EXTRA_ATTR_H
+#ifndef EASY_ATTR_H
+#define EASY_ATTR_H
 
 #include "options.h"
 
-// moi extra attribs :)
+// makes common attributes easy to type out ig
 
 #if ATTRIBUTES_ALLOWED
 #define NON_ATTR_IF(expr) if (false)
@@ -21,4 +21,4 @@
 #define MY_INLINE
 #endif // ATTRIBUTUES_ALLOWED
 
-#endif // EXTRA_ATTR_H
+#endif // EASY_ATTR_H
