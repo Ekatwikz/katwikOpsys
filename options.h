@@ -126,15 +126,6 @@
 #undef HEADER_OKAY
 #endif // EXTENSIONS_ALLOWED
 
-// lol these List methods are just a slightly upgraded version from
-// my Sem1 early exam prep
-#ifndef LIST_TYPE
-#if MUNDANE_MESSAGES
-//#pragma message "LIST_TYPE undefined, defaulting to int"
-#endif // MUNDANE_MESSAGES
-#define LIST_TYPE int
-#endif // LIST_TYPE
-
 #ifndef TRACE_ON_ERR
 #define TRACE_ON_ERR 1
 #elif TRACE_ON_ERR == 1

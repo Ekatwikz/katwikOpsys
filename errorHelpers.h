@@ -343,6 +343,14 @@ replaceBrace:
 
 #endif // EXTENSIONS_ALLOWED
 
+// version of DBGprintf that only compiles in DEBUG_MODE
+// kinda want DBGprintf to be nice and accesible normally
+#if DEBUG_MODE
+#define DBGonly(...) DBGprintf(__VA_ARGS__)
+#else // DEBUG_MODE
+#define DBGonly(...)
+#endif // DEBUG_MODE
+
 #if EXTENSIONS_ALLOWED
 #define myRetry(expr, castType) (__extension__({\
     castType val;\

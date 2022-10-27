@@ -7,7 +7,8 @@
 //#define EXEC_ALLOWED 0
 
 //#include "../katwikOpsys.h"
-#include "../easyCheck.h"
+//#include "../easyCheck.h"
+#include "../myList.h"
 //#include "../errorHelpers.h"
 
 int errsNeg1(int shouldErr) {
@@ -20,9 +21,19 @@ int errsNeg1(int shouldErr) {
 
 int main (int argc, char** argv) {
     close_(STDIN_FILENO);
-    close_(69);
-     
+    //close_(69);
+    sem_t test = sem_make();
+    UNUSED(test);
+
     USAGE(argc > 1);
-    printf_("%s\n", argv[1]);
-    ERR_NEG1(errsNeg1(atoi(argv[1])));
+    int val = atoi(argv[1]);
+
+    MyList* list = newMyList();
+    insertValLast(list, 0);
+    insertValFirst(list, val);
+    printMyList(list, "%d ");
+    deleteMyList(list);
+
+    //printf_("%s\n", argv[1]);
+    ERR_NEG1(errsNeg1(val));
 }
