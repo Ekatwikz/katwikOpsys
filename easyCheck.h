@@ -246,4 +246,36 @@ make_sem_t_(int pshared, unsigned value) {
 	make_sem_t_0_ARGS(__VA_ARGS__))
 #define sem_make(...) make_sem_t(__VA_ARGS__)
 
+int MY_NON_NULL(2)
+	read_(int fildes, void* buf, size_t nbyte) {
+		int returnState = -1
+#if DEBUG_MODE
+			, i = 0
+#endif // DEBUG_MODE
+			; 
+
+		do {
+			// error check except EINTR:
+			ERR_NEG1_(returnState = read(fildes, buf, nbyte), EINTR);
+		} while (returnState == -1);
+
+		return returnState;
+	}
+
+int MY_NON_NULL(2)
+	write_(int fildes, void* buf, size_t nbyte) {
+		int returnState = -1
+#if DEBUG_MODE
+			, i = 0
+#endif // DEBUG_MODE
+			; 
+
+		do {
+			// error check except EINTR:
+			ERR_NEG1_(returnState = write(fildes, buf, nbyte), EINTR);
+		} while (returnState == -1);
+
+		return returnState;
+	}
+
 #endif // EASYCHECK_H

@@ -13,7 +13,7 @@
 #define MY_FORMAT(...) __attribute__(( format (__VA_ARGS__) ))
 #define MY_INLINE __attribute__((always_inline))
 #else // ATTRIBUTUES_ALLOWED
-#define NON_ATTR_IF(expr) if (expr) /* for some parameter checks without getting Wnonnull-compare */
+#define NON_ATTR_IF(expr) if (expr) /* for some null checks without getting Wnonnull-compare */
 #define MY_WARN_UNUSED
 #define MY_NON_NULL(...)
 #define MY_DEPRECATE(msg)

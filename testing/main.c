@@ -6,9 +6,9 @@
 //#define ANSI_COLOR_FIESTA 0
 //#define EXEC_ALLOWED 0
 
-//#include "../katwikOpsys.h"
+#include "../katwikOpsys.h"
 //#include "../easyCheck.h"
-#include "../myList.h"
+//#include "../myList.h"
 //#include "../errorHelpers.h"
 
 int errsNeg1(int shouldErr) {
@@ -36,4 +36,5 @@ int main (int argc, char** argv) {
 
     //printf_("%s\n", argv[1]);
     ERR_NEG1(errsNeg1(val));
+    return 0;
 }
