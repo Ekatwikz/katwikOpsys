@@ -9,12 +9,8 @@
 // big number
 #define GIGA 1000000000L
 
-// find position of a char in a string
-static inline ssize_t MY_INLINE MY_NON_NULL(1)
-	charPos(const char* s, int c) {
-		char* loc = strchr(s, c);
-		return loc ? loc - s : -1;
-	}
+// long story short, block comments don't nest nicely lol
+#define TEMP_REMOVE 0
 
 // useful to force stringify some stuff
 // 2 layers because uhhhh umm
@@ -33,5 +29,12 @@ static inline ssize_t MY_INLINE MY_NON_NULL(1)
 #define UNUSED(thing) do {\
 	(void) (thing);\
 } while(0)
+
+// find position of first occurence of char in a string
+static inline ssize_t MY_INLINE MY_NON_NULL(1)
+	charPos(const char* s, int c) {
+		char* loc = strchr(s, c);
+		return loc ? loc - s : -1;
+	}
 
 #endif // LITTLE_HELPERS_H

@@ -4,3 +4,7 @@
 
 # bin
 /testing/main
+/testing/tiny
+
+# vs:
+/.vscode

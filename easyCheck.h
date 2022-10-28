@@ -5,7 +5,8 @@
 #include <semaphore.h>
 
 #include "errorHelpers.h"
-#include "options.h"
+
+#ifdef HEADER_OKAY
 
 // error checked and retried (if EINTR) versions of some message queue functions
 #define mq_send_(mqdes, msg_ptr, msg_len, msg_prio, ...)\
@@ -278,4 +279,5 @@ int MY_NON_NULL(2)
 		return returnState;
 	}
 
+#endif // HEADER_OKAY
 #endif // EASYCHECK_H

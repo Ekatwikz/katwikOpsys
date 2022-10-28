@@ -16,6 +16,24 @@
 #include "easyAttr.h"
 #include "littleHelpers.h"
 
+#ifndef ERR_MULTIPROCESS
+#pragma GCC error "ERR_MULTIPROCESS macro undefined.\nDefine it above your #include for this file.\nFor multi-process programs:\n#define ERR_MULTIPROCESS 1\nFor single-process programs:\n#define ERR_MULTIPROCESS 0"
+#undef HEADER_OKAY
+#elif ERR_MULTIPROCESS != 1 && ERR_MULTIPROCESS != 0
+#pragma GCC error "ERR_MULTIPROCESS invalid value\nFor multi-process programs:\n#define ERR_MULTIPROCESS 1\nFor single-process programs:\n#define ERR_MULTIPROCESS 0"
+#undef HEADER_OKAY
+#endif // ERR_MULTIPROCESS
+
+// String for usage error,
+// SHOULD be manually defined above include for this file,
+// if USAGE macro is going to be used, otherwise define as blank
+// string or smthn
+#ifndef USAGE_STRING
+#pragma GCC warning "USAGE_STRING macro undefined.\nDefine it above your #include for this file.\nEg:\n#define USAGE_STRING \"arg1 arg2 etc\""
+#endif // ERR_MULTIPROCESS
+
+#ifdef HEADER_OKAY
+
 //  requires:
 //  __FILE__, __LINE__, __func__, pid, ppid, tid
 #define INFO_FORMAT GREEN_BLD"%s" RESET_ESC":" YELLLOW"%d"\
@@ -402,4 +420,5 @@ replaceBrace:
 #define CHECK_RETRY_EOF_(expr, ...) CHECK_RETRY_BASE(expr, ERR_EOF_, int, ##__VA_ARGS__)
 // in theory there's more types to check but whoooooooo caaaaares
 
+#endif // HEADER_OKAY
 #endif // ERROR_HELPERS_H

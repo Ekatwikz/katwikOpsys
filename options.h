@@ -5,22 +5,6 @@
 #define HEADER_OKAY
 #endif // HEADER_OKAY
 
-#ifndef ERR_MULTIPROCESS
-#pragma GCC error "ERR_MULTIPROCESS macro undefined.\nDefine it above your #include for this file.\nFor multi-process programs:\n#define ERR_MULTIPROCESS 1\nFor single-process programs:\n#define ERR_MULTIPROCESS 0"
-#undef HEADER_OKAY
-#elif ERR_MULTIPROCESS != 1 && ERR_MULTIPROCESS != 0
-#pragma GCC error "ERR_MULTIPROCESS invalid value\nFor multi-process programs:\n#define ERR_MULTIPROCESS 1\nFor single-process programs:\n#define ERR_MULTIPROCESS 0"
-#undef HEADER_OKAY
-#endif // ERR_MULTIPROCESS
-
-// String for usage error,
-// SHOULD be manually defined above include for this file,
-// if USAGE macro is going to be used, otherwise define as blank
-// string or smthn
-#ifndef USAGE_STRING
-#pragma GCC warning "USAGE_STRING macro undefined.\nDefine it above your #include for this file.\nEg:\n#define USAGE_STRING \"arg1 arg2 etc\""
-#endif // ERR_MULTIPROCESS
-
 // For less dumb header noise at compile time lul:
 #ifndef MUNDANE_MESSAGES
 #define MUNDANE_MESSAGES 1
