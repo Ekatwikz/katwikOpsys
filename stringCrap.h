@@ -4,6 +4,16 @@
 // poooossibly useful stuff for string operations
 
 #include "errorHelpers.h"
+// TODO: consider returning char* ? xdd
+
+#ifdef HEADER_OKAY
+
+// find position of first occurence of char in a string
+static inline ssize_t MY_INLINE MY_NON_NULL(1)
+	charPos(const char* s, int c) {
+		char* loc = strchr(s, c);
+		return loc ? loc - s : -1;
+	}
 
 void* MY_NON_NULL(1, 2)
 	substr(char* dest, char* src, off_t start, size_t length) {
@@ -105,3 +115,5 @@ char* MY_NON_NULL(1)
 	}
 
 #endif // STRING_CRAP_H
+
+#endif // HEADER_OKAY

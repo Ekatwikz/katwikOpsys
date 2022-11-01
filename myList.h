@@ -15,6 +15,8 @@
 #define LIST_TYPE int
 #endif // LIST_TYPE
 
+#ifdef HEADER_OKAY
+
 typedef struct MyNode_ {
 	LIST_TYPE val;
 	struct MyNode_ *next;
@@ -300,4 +302,5 @@ MyList* MY_NON_NULL(1)
 		return insertFirst(list, newMyNode(newVal));
 	}
 
+#endif // HEADER_OKAY
 #endif // MY_LIST_H

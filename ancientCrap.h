@@ -9,6 +9,23 @@
 
 #include "errorHelpers.h"
 
+// config for whether or not some int-error functions from this header should just be void,
+// immediately using ERR instead of returning an error code
+#ifndef RETURN_ERR
+#define RETURN_ERR 0
+#elif RETURN_ERR == 1
+#if MUNDANE_MESSAGES
+#pragma message "Returning error codes from this header has been manually allowed"
+#endif // MUNDANE_MESSAGES
+#elif RETURN_ERR == 0
+#if MUNDANE_MESSAGES
+#pragma message "Returning error codes from this header has been manually disallowed"
+#endif // MUNDANE_MESSAGES
+#else
+#pragma GCC error "RETURN_ERR macro bad value.\nValid values are 1 (allowed) or 0 (disallowed)"
+#undef HEADER_OKAY
+#endif // RETURN_ERR
+
 #ifdef HEADER_OKAY
 
 void suspend(struct aiocb* cbp) {

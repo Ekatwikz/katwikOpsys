@@ -32,6 +32,36 @@
 #pragma GCC warning "USAGE_STRING macro undefined.\nDefine it above your #include for this file.\nEg:\n#define USAGE_STRING \"arg1 arg2 etc\""
 #endif // ERR_MULTIPROCESS
 
+#ifndef TRACE_ON_ERR
+#define TRACE_ON_ERR 1
+#elif TRACE_ON_ERR == 1
+#if MUNDANE_MESSAGES
+#pragma message "Tracing when ERR happens has been manually enabled"
+#endif // MUNDANE_MESSAGES
+#elif TRACE_ON_ERR == 0
+#if MUNDANE_MESSAGES
+#pragma message "Tracing when ERR happens has been manually disallowed"
+#endif // MUNDANE_MESSAGES
+#else
+#pragma GCC error "TRACE_ON_ERR macro bad value.\nValid values are 1 (allowed) or 0 (disallowed)"
+#undef HEADER_OKAY
+#endif // TRACE_ON_ERR
+
+#ifndef EXEC_ALLOWED
+#define EXEC_ALLOWED 1
+#elif EXEC_ALLOWED == 1
+#if MUNDANE_MESSAGES
+#pragma message "Header's usage of exec (and similar functions) has been manually allowed"
+#endif // MUNDANE_MESSAGES
+#elif EXEC_ALLOWED == 0
+#if MUNDANE_MESSAGES
+#pragma message "Header's usage of exec (and similar functions) has been manually disallowed"
+#endif // MUNDANE_MESSAGES
+#else
+#pragma GCC error "EXEC_ALLOWED macro bad value.\nValid values are 1 (allowed) or 0 (disallowed)"
+#undef HEADER_OKAY
+#endif // EXEC_ALLOWED
+
 #ifdef HEADER_OKAY
 
 //  requires:
@@ -304,8 +334,9 @@ replaceBrace:
 
 // kinda overkill? but I guess this version should let you use the
 // comparison value afterwards
+// should I remove int and go back to bool btw? xdd
 #define USAGE(correctUsage) (__extension__({\
-	bool assertion = (bool) (correctUsage);\
+	int assertion = (int) (correctUsage);\
 	if (!assertion) {\
 		ERR_NEG(fprintf(stderr,\
 					RED_BLD_INV"BAD ARGS" RESET_ESC": " LRED_BLD"!" RESET_ESC"( " LBLUE#correctUsage\

@@ -2,9 +2,6 @@
 #define LITTLE_HELPERS_H
 
 #include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include "easyAttr.h"
 
 // big number
 #define GIGA 1000000000L
@@ -29,12 +26,5 @@
 #define UNUSED(thing) do {\
 	(void) (thing);\
 } while(0)
-
-// find position of first occurence of char in a string
-static inline ssize_t MY_INLINE MY_NON_NULL(1)
-	charPos(const char* s, int c) {
-		char* loc = strchr(s, c);
-		return loc ? loc - s : -1;
-	}
 
 #endif // LITTLE_HELPERS_H

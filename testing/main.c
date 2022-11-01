@@ -6,7 +6,7 @@
 //#define ANSI_COLOR_FIESTA 0
 //#define EXEC_ALLOWED 0
 
-#include "../katwikOpsys.h"
+//#include "../katwikOpsys.h"
 //#include "../easyCheck.h"
 //#include "../myList.h"
 //#include "../errorHelpers.h"
@@ -27,12 +27,6 @@ int main (int argc, char** argv) {
 
     USAGE(argc > 1);
     int val = atoi(argv[1]);
-
-    MyList* list = newMyList();
-    insertValLast(list, 0);
-    insertValFirst(list, val);
-    printMyList(list, "%d ");
-    deleteMyList(list);
 
     //printf_("%s\n", argv[1]);
     ERR_NEG1(errsNeg1(val));

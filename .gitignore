@@ -5,6 +5,8 @@
 # bin
 /testing/main
 /testing/tiny
+/testing/strings
+/testing/list
 
 # vs:
 /.vscode

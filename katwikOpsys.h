@@ -36,6 +36,20 @@
 // settings n shiet for le header
 #include "options.h"
 
+// 1 to use rand_r in randomizers
+#ifndef USE_RAND_R
+#define USE_RAND_R 0
+#elif USE_RAND_R == 1
+#if MUNDANE_MESSAGES
+#pragma message "Usage of rand_r has been manully turned on, you will have to pass a seed to all randomizers"
+#endif // MUNDANE_MESSAGES
+#elif USE_RAND_R == 0
+#pragma message "Usage of rand_r has been manully turned off"
+#else
+#pragma GCC error "USE_RAND_R macro bad value.\nValid values are 0 (off) or 1 (on)"
+#undef HEADER_OKAY
+#endif // USE_RAND_R
+
 // rest of header will now be invisible after the preprocesser if the first section wasn't set
 // up properly, to reduce the flooding of errors from the remaining section being invalid as a consequence.
 // in some cases this will in exchange increase "Wimplicit-function-declaration" and dumb linker errors,
@@ -206,6 +220,5 @@ void sethandler(void (*signalHandler) (int), int sigNo) {
 #undef HEADER_OKAY
 
 #undef DEBUG_MODE
-#undef RETURN_ERR
 //#undef MY_ERR_CODE
 #endif // KATWIK_HEADER

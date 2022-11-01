@@ -4,6 +4,20 @@
 
 #include "options.h"
 
+// 1 for some fun 4bit colors, 0 for boring
+#ifndef ANSI_COLOR_FIESTA
+#define ANSI_COLOR_FIESTA 1
+#elif ANSI_COLOR_FIESTA == 1
+#if MUNDANE_MESSAGES
+#pragma message "Noice colorz have been manually turned on"
+#endif // MUNDANE_MESSAGES
+#elif ANSI_COLOR_FIESTA == 0
+#pragma GCC warning "Bruhh no noice colorz?"
+#else
+#pragma GCC error "ANSI_COLOR_FIESTA macro bad value.\nValid values are 0 (off) or 1 (on)"
+#undef HEADER_OKAY
+#endif // ANSI_COLOR_FIESTA
+
 #if ANSI_COLOR_FIESTA
 #define RESET_ESC		"\033[0m"
 #define DBLUE RESET_ESC		"\033[34m"
