@@ -26,8 +26,6 @@
 #undef HEADER_OKAY
 #endif // RETURN_ERR
 
-#ifdef HEADER_OKAY
-
 void suspend(struct aiocb* cbp) {
 	// TODO: replace with CHECK_RETRY ?
 	for (int ret = -1; ret;) {
@@ -285,5 +283,15 @@ make_sockaddr_in(sa_family_t family, in_port_t port, uint32_t s_addr) {
 	return addr;
 }
 
-#endif // HEADER_OKAY
+in_addr_t MY_NON_NULL(1)
+	inet_addr_(const char* cp) {
+		NON_ATTR_IF(!addr) {
+			RETURN_FAIL("null string? bruhhh");
+		}
+
+		in_addr_t addr;
+		ERR_IN_ADDR_T(addr = inet_addr(cp));
+		return addr;
+	}
+
 #endif // ANCIENT_CRAP_H

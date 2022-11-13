@@ -3,6 +3,13 @@
 
 #include <stdlib.h>
 
+// dodges ASAN sometimes :)
+// a similar macro should be in safe-malloc.h but I can't include that for some reason :(
+#define FREE(ptr) do {\
+	free(ptr);\
+	(ptr) = NULL;\
+} while(0)
+
 // big number
 #define GIGA 1000000000L
 
@@ -14,13 +21,6 @@
 // something something stackoverflow
 #define TO_STR_(s) #s
 #define TO_STR(X) TO_STR_(X)
-
-// dodges ASAN sometimes :)
-// a similar macro should be in safe-malloc.h but I can't include that for some reason :(
-#define FREE(ptr) do {\
-	free(ptr);\
-	(ptr) = NULL;\
-} while(0)
 	
 // goodbye Wunused-parameter/Wunused-variable lol
 #define UNUSED(thing) do {\

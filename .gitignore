@@ -7,6 +7,9 @@
 /testing/tiny
 /testing/strings
 /testing/list
+/testing/lab4Pract
+*.so
+/obj/*.o
 
 # vs:
 /.vscode

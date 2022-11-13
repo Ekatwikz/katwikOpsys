@@ -1,6 +1,6 @@
-#define ERR_MULTIPROCESS 0
-#define USAGE_STRING "value"
 #include "../myList.h"
+#include "errorHelpers.h"
+//USAGE_STRING="val"
 
 int main(int argc, char** argv) {
     printf("%d\n", USAGE(argc == 2));

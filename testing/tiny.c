@@ -1,8 +1,5 @@
-//#include "../littleHelpers.h"
-
-#define ERR_MULTIPROCESS 0
-#define USAGE_STRING ""
-#include "../katwikOpsys.h"
+#include "../littleHelpers.h"
+//USAGE_STRING=""
 
 int main(int argc, char** argv) {
     UNUSED(argc);

@@ -1,15 +1,5 @@
-#define ERR_MULTIPROCESS 0
-#define USAGE_STRING "bruh"
-
-//#define EXEC_ALLOWED 0
-//#define ATTRIBUTES_ALLOWED 1
-//#define ANSI_COLOR_FIESTA 0
-//#define EXEC_ALLOWED 0
-
-//#include "../katwikOpsys.h"
-//#include "../easyCheck.h"
-//#include "../myList.h"
-//#include "../errorHelpers.h"
+#include "../katwikOpsys.h"
+//USAGE_STRING="val"
 
 int errsNeg1(int shouldErr) {
     if (shouldErr == -1) {

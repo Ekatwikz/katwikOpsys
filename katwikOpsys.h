@@ -50,15 +50,6 @@
 #undef HEADER_OKAY
 #endif // USE_RAND_R
 
-// rest of header will now be invisible after the preprocesser if the first section wasn't set
-// up properly, to reduce the flooding of errors from the remaining section being invalid as a consequence.
-// in some cases this will in exchange increase "Wimplicit-function-declaration" and dumb linker errors,
-// but overall it should make stuff cleaner for new users who haven't yet tried to use anything from
-// it, but are confused on why it "doesn't just work" (you know who you are xD)
-#ifndef HEADER_OKAY
-#pragma message "Some macro wasn't set up properly, rest of header won't be preprocessed"
-#else
-
 // cute colorz
 #include "colors.h"
 
@@ -196,28 +187,12 @@ void printBuf(char* buffer, size_t sz) {
 	printf_("\n");
 }
 
-// should be might_err return type
-in_addr_t MY_NON_NULL(1)
-	inet_addr_(const char* cp) {
-		NON_ATTR_IF(!addr) {
-			RETURN_FAIL("null string? bruhhh");
-		}
-
-		in_addr_t addr;
-		// should be a different macro
-		ERR_IN_ADDR_T(addr = inet_addr(cp));
-		return addr;
-	}
-
 // easy way to set a signal handler AND error check
 void sethandler(void (*signalHandler) (int), int sigNo) {
 	struct sigaction action = {0};
 	action.sa_handler = signalHandler;
 	ERR_NEG1( sigaction(sigNo, &action, NULL) ); // TODO: change this
 }
-
-#endif // HEADER_OKAY
-#undef HEADER_OKAY
 
 #undef DEBUG_MODE
 //#undef MY_ERR_CODE

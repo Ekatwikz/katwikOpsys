@@ -1,6 +1,5 @@
-#define ERR_MULTIPROCESS 0
-#define USAGE_STRING "str"
 #include "../stringCrap.h"
+//USAGE_STRING="str"
 
 int main(int argc, char** argv) {
     USAGE(argc > 1);

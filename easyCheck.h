@@ -6,8 +6,6 @@
 
 #include "errorHelpers.h"
 
-#ifdef HEADER_OKAY
-
 // error checked and retried (if EINTR) versions of some message queue functions
 #define mq_send_(mqdes, msg_ptr, msg_len, msg_prio, ...)\
 	CHECK_RETRY(mq_send(mqdes, msg_ptr, msg_len, msg_prio), ##__VA_ARGS__)
@@ -154,18 +152,7 @@
 #define open_(path, oflag, ...)\
 	CHECK_RETRY(open(path, oflag, ##__VA_ARGS__))
 
-sigset_t MY_WARN_UNUSED
-make_sigset_t_(int signo) {
-	sigset_t sigset;
-	ERR_NEG1(sigemptyset(&sigset));
-
-	// to allow returning emptyset if signo == 0
-	if (signo) {
-		sigaddset_(&sigset, signo);
-	}
-
-	return sigset;
-}
+extern sigset_t MY_WARN_UNUSED make_sigset_t_(int signo);
 // bigbrane """vararg""" lul
 #define make_sigset_t_0_ARGS() make_sigset_t_(0)
 #define make_sigset_t_1_ARG(signo) make_sigset_t_(signo)
@@ -179,12 +166,8 @@ make_sigset_t_(int signo) {
 // will keep the old format too tho b/c I have some old programs with them :(
 // we do sum backwards compatibility ig
 
-pthread_mutex_t MY_WARN_UNUSED
-make_pthread_mutex_t_(const pthread_mutexattr_t* attr) {
-	pthread_mutex_t mutex;
-	pthread_mutex_init_(&mutex, attr);
-	return mutex;
-}
+extern pthread_mutex_t MY_WARN_UNUSED
+	make_pthread_mutex_t_(const pthread_mutexattr_t* attr);
 #define make_pthread_mutex_t_0_ARGS() make_pthread_mutex_t_(NULL)
 #define make_pthread_mutex_t_1_ARG(attr) make_pthread_mutex_t_(attr)
 #define make_pthread_mutex_t_X_ARGS(x, A, FUNC, ...) FUNC
@@ -193,20 +176,12 @@ make_pthread_mutex_t_(const pthread_mutexattr_t* attr) {
 		make_pthread_mutex_t_0_ARGS(__VA_ARGS__))
 #define pthread_mutex_make(...) make_pthread_mutex_t(__VA_ARGS__)
 
-pthread_attr_t MY_WARN_UNUSED
-make_pthread_attr_t(void) {
-	pthread_attr_t attr;
-	pthread_attr_init_(&attr);
-	return attr;
-}
+extern pthread_attr_t MY_WARN_UNUSED
+make_pthread_attr_t(void);
 #define pthread_attr_make() make_pthread_attr_t()
 
-pthread_cond_t MY_WARN_UNUSED
-make_pthread_cond_t_(const pthread_condattr_t* attr) {
-	pthread_cond_t cond;
-	pthread_cond_init_(&cond, attr);
-	return cond;
-}
+extern pthread_cond_t MY_WARN_UNUSED
+	make_pthread_cond_t_(const pthread_condattr_t* attr);
 #define make_pthread_cond_t_0_ARGS() make_pthread_cond_t_(NULL)
 #define make_pthread_cond_t_1_ARG(attr) make_pthread_cond_t_(attr)
 #define make_pthread_cond_t_X_ARGS(x, A, FUNC, ...) FUNC
@@ -215,12 +190,8 @@ make_pthread_cond_t_(const pthread_condattr_t* attr) {
 		make_pthread_cond_t_0_ARGS(__VA_ARGS__))
 #define pthread_cond_make(...) make_pthread_cond_t(__VA_ARGS__)
 
-pthread_barrier_t MY_WARN_UNUSED
-make_pthread_barrier_t_(const pthread_barrierattr_t* attr, unsigned count) {
-	pthread_barrier_t barrier;
-	pthread_barrier_init_(&barrier, attr, count);
-	return barrier;
-}
+extern pthread_barrier_t MY_WARN_UNUSED
+	make_pthread_barrier_t_(const pthread_barrierattr_t* attr, unsigned count);
 #define make_pthread_barrier_t_0_ARGS() make_pthread_barrier_t_(NULL, 2)
 #define make_pthread_barrier_t_1_ARG(count) make_pthread_barrier_t_(NULL, count)
 #define make_pthread_barrier_t_2_ARGS(attr, count) make_pthread_barrier_t_(attr, count)
@@ -231,12 +202,8 @@ make_pthread_barrier_t_(const pthread_barrierattr_t* attr, unsigned count) {
 	make_pthread_barrier_t_0_ARGS(__VA_ARGS__))
 #define pthread_barrier_make(...) make_pthread_barrier_t(__VA_ARGS__)
 
-sem_t MY_WARN_UNUSED
-make_sem_t_(int pshared, unsigned value) {
-	sem_t sem;
-	sem_init_(&sem, pshared, value);
-	return sem;
-}
+extern sem_t MY_WARN_UNUSED
+	make_sem_t_(int pshared, unsigned value);
 #define make_sem_t_0_ARGS() make_sem_t_(0, 1) /* binary sem by default ig lol */
 #define make_sem_t_1_ARG(count) make_sem_t_(0, count)
 #define make_sem_t_2_ARGS(pshared, count) make_sem_t_(pshared, count)
@@ -247,37 +214,9 @@ make_sem_t_(int pshared, unsigned value) {
 	make_sem_t_0_ARGS(__VA_ARGS__))
 #define sem_make(...) make_sem_t(__VA_ARGS__)
 
-int MY_NON_NULL(2)
-	read_(int fildes, void* buf, size_t nbyte) {
-		int returnState = -1
-#if DEBUG_MODE
-			, i = 0
-#endif // DEBUG_MODE
-			; 
+extern int MY_NON_NULL(2)
+	read_(int fildes, void* buf, size_t nbyte);
+extern int MY_NON_NULL(2)
+	write_(int fildes, void* buf, size_t nbyte);
 
-		do {
-			// error check except EINTR:
-			ERR_NEG1_(returnState = read(fildes, buf, nbyte), EINTR);
-		} while (returnState == -1);
-
-		return returnState;
-	}
-
-int MY_NON_NULL(2)
-	write_(int fildes, void* buf, size_t nbyte) {
-		int returnState = -1
-#if DEBUG_MODE
-			, i = 0
-#endif // DEBUG_MODE
-			; 
-
-		do {
-			// error check except EINTR:
-			ERR_NEG1_(returnState = write(fildes, buf, nbyte), EINTR);
-		} while (returnState == -1);
-
-		return returnState;
-	}
-
-#endif // HEADER_OKAY
 #endif // EASYCHECK_H
