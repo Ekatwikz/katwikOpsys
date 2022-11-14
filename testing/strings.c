@@ -1,7 +1,7 @@
 #include "../stringCrap.h"
-//USAGE_STRING="str"
 
 int main(int argc, char** argv) {
+    char* usageDescription = "str";
     USAGE(argc > 1);
 
     printf("%ld\n", charPos(argv[1], 'q'));

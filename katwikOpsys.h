@@ -11,29 +11,14 @@
 #undef HEADER_OKAY
 #endif // __GNUC__
 
-#define _POSIX_C_SOURCE 200809L
-
 #include <arpa/inet.h>
-#include <errno.h>
 #include <fcntl.h>
-#include <netinet/in.h>
-#include <pthread.h>
-#include <semaphore.h>
-#include <signal.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <mqueue.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 #include <time.h>
-#include <unistd.h>
 
-// this one can actually be removed b/c
-// no actual code requires it,
-// buuut there's some macros of this header's functions
-// so yeahh I guess this makes life easier sometimes?
-#include <mqueue.h>
-
-// settings n shiet for le header
+// settings n stuff for le header
 #include "options.h"
 
 // 1 to use rand_r in randomizers
@@ -44,7 +29,9 @@
 #pragma message "Usage of rand_r has been manully turned on, you will have to pass a seed to all randomizers"
 #endif // MUNDANE_MESSAGES
 #elif USE_RAND_R == 0
+#if MUNDANE_MESSAGES
 #pragma message "Usage of rand_r has been manully turned off"
+#endif // MUNDANE_MESSAGES
 #else
 #pragma GCC error "USE_RAND_R macro bad value.\nValid values are 0 (off) or 1 (on)"
 #undef HEADER_OKAY
@@ -71,6 +58,7 @@
 // homebrew linked list xdd
 #include "myList.h"
 
+// stuff to kill off
 #include "ancientCrap.h"
 
 void waitAllChildren(void) {

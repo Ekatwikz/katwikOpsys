@@ -1,8 +1,6 @@
 # TODO:
-- figure out how to `make` multiple at once?
 - remove ancientCrap.h
 - remove easyAttr.h
-- autoescape quotes in makefile
+- add 'randAndSleep.h' and 'randAndSleep.c', clean out katwikOpsys.h
 - remove `HEADER_OKAY`
-- rename `USAGE_STRING`
 - remove list's `*tail`

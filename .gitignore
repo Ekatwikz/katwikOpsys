@@ -3,13 +3,7 @@
 *~
 
 # bin
-/testing/main
-/testing/tiny
-/testing/strings
-/testing/list
-/testing/lab4Pract
-*.so
-/obj/*.o
+/obj
 
 # vs:
 /.vscode

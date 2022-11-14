@@ -1,23 +1,23 @@
-#include <sys/stat.h>
-#include <fcntl.h>
-
-//USAGE_STRING="filename\nn - amount to generate"
 #include "katwikOpsys.h"
 
 int main (int argc, char** argv) {
+	char* usageDescription = "n filename\n"
+							"n - amount of rands to generate\n"
+							"filename - file to write";
 	USAGE(argc == 3);
 
 	int n = atoi(argv[1]);
 	USAGE( n >= 1 );
 
-	char* numms = malloc_(n);
+	char* nums = malloc_(n);
 	int fileDescriptor = open_(argv[2], O_WRONLY | O_APPEND);
 
-	myRandSleep(1, 2, NULL);
+	myRandSleep(1, 2);
 
 	srand(time(NULL));
-	for (int i = 0; i < n; ++i)
+	for (int i = 0; i < n; ++i) {
 		nums[i] = myRand('0', '9');
+	}
 
     printBuf(nums, n); // no '\0'? easy :)
 

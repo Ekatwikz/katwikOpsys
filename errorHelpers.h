@@ -24,15 +24,6 @@
 #define ERR_MULTIPROCESS 0
 #endif // ERR_MULTIPROCESS
 
-// String for usage error,
-// SHOULD be manually defined above include for this file,
-// if USAGE macro is going to be used, otherwise define as blank
-// string or smthn
-#ifndef USAGE_STRING
-#pragma GCC warning "USAGE_STRING macro undefined.\nSet it in your makefile.\nEg:\n#define USAGE_STRING=\\\"arg1 arg2 etc\\\""
-#define USAGE_STRING ""
-#endif // ERR_MULTIPROCESS
-
 #ifndef TRACE_ON_ERR
 #define TRACE_ON_ERR 1
 #elif TRACE_ON_ERR == 1
@@ -144,7 +135,7 @@ extern void myStackTracer(FILE* stream,
 		ERR_NEG(fprintf(stderr,\
 					RED_BLD_INV"BAD ARGS" RESET_ESC": " LRED_BLD"!" RESET_ESC"( " LBLUE#correctUsage\
 					RESET_ESC" )\n\n" LRED_BLD"Usage" RESET_ESC":\n" BWHITE"$ %s" RESET_ESC" %s\n"\
-					, argv[0], USAGE_STRING));\
+					, argv[0], usageDescription));\
 		ERR_EXIT(ERR_MULTIPROCESS);\
 	}\
 	assertion;\
@@ -172,7 +163,7 @@ extern void myStackTracer(FILE* stream,
 		ERR_NEG(fprintf(stderr,\
 					RED_BLD_INV"BAD ARGS" RESET_ESC": " LRED_BLD"!" RESET_ESC"( " LBLUE#correctUsage\
 					RESET_ESC" )\n\n" LRED_BLD"Usage" RESET_ESC":\n" BWHITE"$ %s" RESET_ESC" %s\n"\
-					, argv[0], USAGE_STRING));\
+					, argv[0], usageDescription));\
 		ERR_EXIT(ERR_MULTIPROCESS);\
 	}\
 } while(0)

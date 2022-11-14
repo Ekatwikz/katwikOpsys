@@ -1,5 +1,4 @@
 #include "../katwikOpsys.h"
-//USAGE_STRING="val"
 
 int errsNeg1(int shouldErr) {
     if (shouldErr == -1) {
@@ -10,6 +9,8 @@ int errsNeg1(int shouldErr) {
 }
 
 int main (int argc, char** argv) {
+    char* usageDescription = "val";
+
     close_(STDIN_FILENO);
     //close_(69);
     sem_t test = sem_make();

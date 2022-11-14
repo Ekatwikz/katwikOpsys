@@ -12,14 +12,22 @@ static inline ssize_t MY_INLINE MY_NON_NULL(1)
 		return loc ? loc - s : -1;
 	}
 
+extern char* MY_NON_NULL(1)
+	removeNewline(char* str);
+
+extern char* MY_NON_NULL(1)
+	strReverse(char* str, size_t length);
+
 // TODO: consider returning char* ? xdd
 extern void* MY_NON_NULL(1, 2)
 	substr(char* dest, char* src, off_t start, size_t length);
 
 extern void* MY_NON_NULL(1)
+	removeNinstances(char* str, char c, ssize_t n);
+
+extern void* MY_NON_NULL(1)
 	leftShift_fill(void* buff, size_t length, size_t amount, int c);
 
-// TODO: debug-mode the rest of this stuff
 extern void* MY_NON_NULL(1)
 	leftShift(void* buff, size_t length, size_t amount);
 
@@ -34,11 +42,5 @@ extern void* MY_NON_NULL(1)
 
 extern void* MY_NON_NULL(1)
 	rightShift_cycle(void* buff, size_t length, size_t amount);
-
-extern void* MY_NON_NULL(1)
-	removeNinstances(char* str, char c, ssize_t n);
-
-extern char* MY_NON_NULL(1)
-	removeNewline(char* str);
 
 #endif // STRING_CRAP_H

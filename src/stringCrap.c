@@ -97,3 +97,16 @@ char* MY_NON_NULL(1)
 
 		return ret;
 	}
+
+char* MY_NON_NULL(1)
+	strReverse(char* str, size_t length) {
+		char* ret = str;
+
+		for (char *end = str + length - 1, tmp; str < end; ++str, --end) {
+			tmp = *str;
+			*str = *end;
+			*end = tmp;
+		}
+
+		return ret;
+	}

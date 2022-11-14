@@ -1,11 +1,10 @@
 #include "katwikOpsys.h"
-//USAGE_STRING="inputFile outputFile chunks\nwhere chunks >= 1"
-
-#include <sys/types.h>
 
 #define BUF_SIZE 128
 
 int main(int argc, char** argv) {
+	char* usageDescription = "inputFile outputFile chunks\nwhere chunks >= 1";
+
 	USAGE(argc == 4);
 	char* inputFile = argv[1];
 	char* outputFile = argv[2];
