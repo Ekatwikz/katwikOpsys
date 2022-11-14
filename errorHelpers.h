@@ -14,7 +14,7 @@
 #include "options.h"
 #include "colors.h"
 #include "easyAttr.h"
-#include "littleHelpers.h"
+#include "tinyHelpers.h"
 
 #ifndef ERR_MULTIPROCESS
 #pragma GCC warning "ERR_MULTIPROCESS macro undefined, will default to 0\nSet it in your makefile.\nFor multi-process programs:\nERR_MULTIPROCESS=1\nFor single-process programs:\nRR_MULTIPROCESS=0"
@@ -185,6 +185,9 @@ extern void myStackTracer(FILE* stream,
 } while(0)
 
 #endif // EXTENSIONS_ALLOWED
+
+// again for consistency
+#define usage_(correctUsage) USAGE(correctUsage)
 
 // version of DBGprintf that only compiles in DEBUG_MODE
 // kinda want DBGprintf to be nice and accesible normally

@@ -1,10 +1,5 @@
 #include "myList.h"
 
-#include "options.h"
-#include "easyAttr.h"
-#include "errorHelpers.h"
-#include "easyCheck.h"
-
 MyNode* MY_WARN_UNUSED
 newMyNode (LIST_TYPE val) {
 	MyNode *newMyNode;

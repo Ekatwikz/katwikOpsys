@@ -14,9 +14,9 @@ int main (int argc, char** argv) {
     close_(STDIN_FILENO);
     //close_(69);
     sem_t test = sem_make();
-    UNUSED(test);
+    unused_(test);
 
-    USAGE(argc > 1);
+    usage_(argc > 1);
     int val = atoi(argv[1]);
 
     //printf_("%s\n", argv[1]);

@@ -4,10 +4,10 @@ int main (int argc, char** argv) {
 	char* usageDescription = "n filename\n"
 							"n - amount of rands to generate\n"
 							"filename - file to write";
-	USAGE(argc == 3);
+	usage_(argc == 3);
 
 	int n = atoi(argv[1]);
-	USAGE( n >= 1 );
+	usage_( n >= 1 );
 
 	char* nums = malloc_(n);
 	int fileDescriptor = open_(argv[2], O_WRONLY | O_APPEND);
@@ -24,5 +24,5 @@ int main (int argc, char** argv) {
 	write_(fileDescriptor, nums, n);
 	close_(fileDescriptor);
 
-	FREE(nums); // slightly safer
+	free_(nums); // slightly safer
 }

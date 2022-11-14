@@ -29,16 +29,12 @@ CLEANONMAKE:=1
 # 0 to not
 CLEARONMAKE:=1
 
+# colors lol
+USECOLOR:=1
+
 # other options for the headers:
 MUNDANE_MESSAGES:=0
 EXTENSIONS_ALLOWED:=1
-
-KATLIBS:=errorHelpers easyCheck myList stringCrap
-SYSLIBS:=pthread rt
-DEBUGFLAGS:=-g3 -O0
-FFLAGS:=sanitize=address,undefined track-macro-expansion=0 no-omit-frame-pointer
-AUTOCLEANKATOBJS:=0
-USECOLOR:=1
 
 ifeq ($(CLEANONMAKE), 0)
 	SHOULDCLEAN =
@@ -82,6 +78,12 @@ else # ifeq ($(FEELINGLAZY), 1) # default
 	WARNINGS+=no-unused-parameter no-unused-variable no-unused-function no-cpp
 endif
 
+KATLIBS:=errorHelpers easyCheck myList stringCrap randAndSleep littleHelpers
+SYSLIBS:=pthread rt
+DEBUGFLAGS:=-g3 -O0
+FFLAGS:=sanitize=address,undefined track-macro-expansion=0 no-omit-frame-pointer
+AUTOCLEANKATOBJS:=0
+
 PREDEFINES+=-D '_GNU_SOURCE=1'
 PREDEFINES+=-D '_POSIX_C_SOURCE=200809L'
 PREDEFINES+=-D 'MUNDANE_MESSAGES=$(MUNDANE_MESSAGES)'
@@ -89,7 +91,7 @@ PREDEFINES+=-D 'ERR_MULTIPROCESS=$(ERR_MULTIPROCESS)'
 PREDEFINES+=-D 'USE_RAND_R=$(USE_RAND_R)'
 PREDEFINES+=-D 'EXTENSIONS_ALLOWED=$(EXTENSIONS_ALLOWED)'
 
-INCLUDE=..
+KATHDRPATH=..
 KATOBJPATH=../obj
 KATSRCPATH=../src
 KATOBJS=$(KATLIBS:%=$(KATOBJPATH)/%.o)
@@ -103,15 +105,15 @@ LDFLAGS=$(SYSLIBS:%=-l%)
 
 all: $(SHOULDCLEAN) $(SHOULDCLEAR) $(DEFAULTFILES)
 
-$(KATOBJPATH)/%.o: $(KATSRCPATH)/%.c
+$(KATOBJPATH)/%.o: $(KATSRCPATH)/%.c $(KATHDRPATH)/%.h
 	@mkdir -pv $(KATOBJPATH)
 	@printf $(COMPILEMSG)
-	@$(CC) $(INCLUDE:%=-I %) $(CFLAGS) $(PREDEFINES) -c $< -o $@ $(LDFLAGS)
+	@$(CC) $(KATHDRPATH:%=-I %) $(CFLAGS) $(PREDEFINES) -c $< -o $@ $(LDFLAGS)
 
 $(DEFAULTFILES): $(DEFAULTFILES:%=%.c) $(KATOBJS)
 %: %.c $(KATOBJS)
 	@printf $(COMPILEMSG)
-	-@$(CC) $(INCLUDE:%=-I %) $(CFLAGS) $(PREDEFINES) $(KATOBJS) $< -o $@ $(LDFLAGS)
+	-@$(CC) $(KATHDRPATH:%=-I %) $(CFLAGS) $(PREDEFINES) $(KATOBJS) $< -o $@ $(LDFLAGS)
 
 clean:
 ifeq ($(AUTOCLEANMSGQUEUES), 1)

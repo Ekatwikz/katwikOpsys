@@ -1,5 +1,5 @@
-#ifndef EASYCHECK_H
-#define EASYCHECK_H
+#ifndef EASY_CHECK_H
+#define EASY_CHECK_H
 
 #include <netinet/in.h>
 #include <semaphore.h>
@@ -152,7 +152,8 @@
 #define open_(path, oflag, ...)\
 	CHECK_RETRY(open(path, oflag, ##__VA_ARGS__))
 
-extern sigset_t MY_WARN_UNUSED make_sigset_t_(int signo);
+extern sigset_t MY_WARN_UNUSED
+	make_sigset_t_(int signo);
 // bigbrane """vararg""" lul
 #define make_sigset_t_0_ARGS() make_sigset_t_(0)
 #define make_sigset_t_1_ARG(signo) make_sigset_t_(signo)
@@ -160,11 +161,7 @@ extern sigset_t MY_WARN_UNUSED make_sigset_t_(int signo);
 #define make_sigset_t(...) make_sigset_t_X_ARGS(, ##__VA_ARGS__,\
 		make_sigset_t_1_ARG(__VA_ARGS__),\
 		make_sigset_t_0_ARGS(__VA_ARGS__))
-
 #define sigset_make(...) make_sigset_t(__VA_ARGS__)
-// gonna start adding ^these b/c the POSIX ones look like this
-// will keep the old format too tho b/c I have some old programs with them :(
-// we do sum backwards compatibility ig
 
 extern pthread_mutex_t MY_WARN_UNUSED
 	make_pthread_mutex_t_(const pthread_mutexattr_t* attr);
@@ -177,7 +174,7 @@ extern pthread_mutex_t MY_WARN_UNUSED
 #define pthread_mutex_make(...) make_pthread_mutex_t(__VA_ARGS__)
 
 extern pthread_attr_t MY_WARN_UNUSED
-make_pthread_attr_t(void);
+	make_pthread_attr_t(void);
 #define pthread_attr_make() make_pthread_attr_t()
 
 extern pthread_cond_t MY_WARN_UNUSED
@@ -219,4 +216,4 @@ extern int MY_NON_NULL(2)
 extern int MY_NON_NULL(2)
 	write_(int fildes, void* buf, size_t nbyte);
 
-#endif // EASYCHECK_H
+#endif // EASY_CHECK_H

@@ -1,6 +1,6 @@
-#include "../littleHelpers.h"
+#include "../tinyHelpers.h"
 
 int main(int argc, char** argv) {
-    UNUSED(argc);
-    UNUSED(argv);
+    unused_(argc);
+    unused_(argv);
 }

@@ -1,6 +1,6 @@
 // yey colorz :)
-#ifndef MYCOLORS_H
-#define MYCOLORS_H
+#ifndef MY_COLORS_H
+#define MY_COLORS_H
 
 #include "options.h"
 
@@ -45,4 +45,4 @@
 #define YELLLOW			""
 #endif // ANSI_COLOR_FIESTA
 
-#endif // MYCOLORS_H
+#endif // MY_COLORS_H

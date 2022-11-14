@@ -16,7 +16,7 @@ extern char* MY_NON_NULL(1)
 	removeNewline(char* str);
 
 extern char* MY_NON_NULL(1)
-	strReverse(char* str, size_t length);
+	reverse(char* str, size_t length);
 
 // TODO: consider returning char* ? xdd
 extern void* MY_NON_NULL(1, 2)

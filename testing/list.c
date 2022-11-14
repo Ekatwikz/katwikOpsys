@@ -4,7 +4,7 @@
 int main(int argc, char** argv) {
     char* usageDescription = "val";
 
-    USAGE(argc == 2);
+    usage_(argc == 2);
     int val = atoi(argv[1]);
 
     MyList* list = newMyList();

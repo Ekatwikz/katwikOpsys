@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv) {
     char* usageDescription = "str";
-    USAGE(argc > 1);
+    usage_(argc > 1);
 
     printf("%ld\n", charPos(argv[1], 'q'));
     printf("%s\n", (char*) leftShift_cycle(argv[1], strlen(argv[1]), 2));

@@ -5,12 +5,12 @@
 int main(int argc, char** argv) {
 	char* usageDescription = "inputFile outputFile chunks\nwhere chunks >= 1";
 
-	USAGE(argc == 4);
+	usage_(argc == 4);
 	char* inputFile = argv[1];
 	char* outputFile = argv[2];
 
 	int chunks;
-	USAGE(( chunks = atoi(argv[3]) ) >= 1);
+	usage_(( chunks = atoi(argv[3]) ) >= 1);
 
 	int inputFildes = open_(inputFile, O_RDONLY),
 		outputFildes = open_(outputFile, O_WRONLY);
@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 	parallelIO(NULL, inputFildes, 2, BUF_SIZE, (void*) readBuffer, NULL, chunks, READ);
 
 	printBuf(readBuffer, chunks * BUF_SIZE);
-	FREE(readBuffer);
+	free_(readBuffer);
 
 	close_(inputFildes);
 	close_(outputFildes);
