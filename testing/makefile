@@ -2,6 +2,9 @@
 # separate with spaces
 DEFAULTFILES:=lab4Pract testing
 
+# folder to submit to
+SUBMISSIONPATH:=./submissionTest
+
 # 1 for ez compile,
 # 0 to see a few more warnings,
 # -1 if you you're a perfectionist
@@ -101,7 +104,7 @@ CC=gcc
 CFLAGS=$(PREPROCESS) $(ASSEMBLE) $(WARNINGS:%=-W%) $(FFLAGS:%=-f%) $(DEBUGFLAGS)
 LDFLAGS=$(SYSLIBS:%=-l%)
 
-.PHONY: clean clear all
+.PHONY: clean clear all zip submit
 
 all: $(SHOULDCLEAN) $(SHOULDCLEAR) $(DEFAULTFILES)
 
@@ -129,3 +132,24 @@ endif
 
 clear:
 	@clear
+
+zip: $(DEFAULTFILES:%=%.c)
+	-@rm -v $(USER).tar.bz2
+	@mkdir -pv __submission_tmp__/katwikOpsys/headers
+	@mkdir -pv __submission_tmp__/katwikOpsys/src
+
+	@cp makefile $(DEFAULTFILES) $(DEFAULTFILES:%=%.c)  __submission_tmp__
+	@cp $(KATHDRPATH)/*.h __submission_tmp__/katwikOpsys/headers
+	@cp $(KATSRCPATH)/*.c __submission_tmp__/katwikOpsys/src
+
+	@$(SHOULDCLEAR)
+	@printf "$(BLUE)=== Creating $(GREEN)$(USER).tar.bz2$(BLUE) ===$(RESET)\n"
+	@tar --create --bzip2 --file=$(USER).tar.bz2 -C __submission_tmp__ .
+	@rm -rf __submission_tmp__
+	@tar --list --bzip2 --file=$(USER).tar.bz2
+
+submit: zip
+	@printf "$(BLUE)=== Submitting $(GREEN)$(USER).tar.bz2$(BLUE) to $(GREEN)$(SUBMISSIONPATH)$(BLUE) ===$(RESET)\n"
+	@cp $(USER).tar.bz2 $(SUBMISSIONPATH)
+	@ls -l $(SUBMISSIONPATH)/$(USER).tar.bz2
+	@stat $(SUBMISSIONPATH)/$(USER).tar.bz2
