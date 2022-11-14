@@ -15,7 +15,6 @@
 #pragma GCC warning "Bruhh no noice colorz?"
 #else
 #pragma GCC error "ANSI_COLOR_FIESTA macro bad value.\nValid values are 0 (off) or 1 (on)"
-#undef HEADER_OKAY
 #endif // ANSI_COLOR_FIESTA
 
 #if ANSI_COLOR_FIESTA

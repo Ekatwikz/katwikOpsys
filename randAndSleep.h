@@ -19,7 +19,6 @@
 #endif // MUNDANE_MESSAGES
 #else
 #pragma GCC error "USE_RAND_R macro bad value.\nValid values are 0 (off) or 1 (on)"
-#undef HEADER_OKAY
 #endif // USE_RAND_R
 
 extern void myNanoSleep (long nanoseconds);

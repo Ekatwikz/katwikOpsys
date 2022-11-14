@@ -1,10 +1,6 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
-#ifndef HEADER_OKAY
-#define HEADER_OKAY
-#endif // HEADER_OKAY
-
 // For less dumb header noise at compile time lul:
 #ifndef MUNDANE_MESSAGES
 #define MUNDANE_MESSAGES 1

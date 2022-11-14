@@ -23,7 +23,6 @@
 #endif // MUNDANE_MESSAGES
 #else
 #pragma GCC error "RETURN_ERR macro bad value.\nValid values are 1 (allowed) or 0 (disallowed)"
-#undef HEADER_OKAY
 #endif // RETURN_ERR
 
 void suspend(struct aiocb* cbp) {
