@@ -1,2 +1,9 @@
-# mostly for us vim monkeys lol
+# vim crap
 *.swp
+*~
+
+# bin
+/obj
+
+# vs
+/.vscode
