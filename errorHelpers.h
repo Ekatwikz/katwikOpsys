@@ -36,7 +36,6 @@
 #endif // MUNDANE_MESSAGES
 #else
 #pragma GCC error "TRACE_ON_ERR macro bad value.\nValid values are 1 (allowed) or 0 (disallowed)"
-#undef HEADER_OKAY
 #endif // TRACE_ON_ERR
 
 #ifndef EXEC_ALLOWED
@@ -52,7 +51,6 @@
 #else
 #pragma GCC error "EXEC_ALLOWED macro bad value, will default to 0\nValid values are 1 (allowed) or 0 (disallowed)"
 #define EXEC_ALLOWED 0
-#undef HEADER_OKAY
 #endif // EXEC_ALLOWED
 
 //  requires:

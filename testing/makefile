@@ -1,6 +1,6 @@
 # base filenames go here
 # separate with spaces
-DEFAULTFILES:=lab4Pract testing
+DEFAULTFILES:=lab4Pract strings
 
 # folder to submit to
 SUBMISSIONPATH:=../../testArea2
@@ -30,7 +30,7 @@ CLEANONMAKE:=1
 
 # 1 to clear whenever you make
 # 0 to not
-CLEARONMAKE:=0
+CLEARONMAKE:=1
 
 # colors lol
 USECOLOR:=1
@@ -40,13 +40,13 @@ MUNDANE_MESSAGES:=0
 EXTENSIONS_ALLOWED:=1
 
 # objects and paths to use
-OWNLIBS:=errorHelpers easyCheck littleHelpers randAndSleep
+OWNLIBS:=errorHelpers easyCheck littleHelpers randAndSleep stringCrap
 OWNLIBPATH=../..
 OWNLIBNAME=testNewName
 OWNOBJFOLDER=obj
 OWNSRCFOLDER=src
 
-AUTOCLEANOWNOBJS:=1
+AUTOCLEANOWNOBJS:=0
 HDRPATH=$(OWNLIBPATH)/$(OWNLIBNAME)
 OBJPATH=$(HDRPATH)/$(OWNOBJFOLDER)
 SRCPATH=$(HDRPATH)/$(OWNSRCFOLDER)

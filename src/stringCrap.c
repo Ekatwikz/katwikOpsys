@@ -57,12 +57,16 @@ void* MY_NON_NULL(1)
 
 void* MY_NON_NULL(1)
 	rightShift_fill(void* buff, size_t length, size_t amount, int c) {
-		return memset(((int8_t*) buff) + length - amount, c, amount);
+		memmove(((int8_t*) buff) + amount, buff, length - amount);
+		memset(buff, c, amount);
+
+		return buff;
 	}
 
 void* MY_NON_NULL(1)
 	rightShift(void* buff, size_t length, size_t amount) {
-		return rightShift_fill(buff, length, amount, 0);
+		rightShift_fill(buff, length, amount, 0);
+		return ((int8_t*) buff) + amount;
 	}
 
 void* MY_NON_NULL(1)
