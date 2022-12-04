@@ -8,7 +8,6 @@
 #pragma message "Mundane messages have been manually turned on"
 #elif MUNDANE_MESSAGES != 0
 #pragma GCC error "MUNDANE_MESSAGES macro bad values.\nValid values are 0 (off) or 1 (on)"
-#undef HEADER_OKAY
 #endif // MUNDANE_MESSAGES
 
 // 1 for moar info, 0 normally
@@ -25,7 +24,6 @@
 #elif DEBUG_MODE == 0
 #else
 #pragma GCC error "DEBUG_MODE macro bad value.\nValid values are 0 (off) or 1 (on)"
-#undef HEADER_OKAY
 #endif // DEBUG_MODE
 
 // mainly for braced groups in the seksi macros lol
@@ -41,7 +39,6 @@
 #endif // MUNDANE_MESSAGES
 #else
 #pragma GCC error "EXTENSIONS_ALLOWED macro bad value.\nValid values are 1 (allowed) or 0 (disallowed)"
-#undef HEADER_OKAY
 #endif // EXTENSIONS_ALLOWED
 
 #endif // OPTIONS_H

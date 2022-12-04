@@ -17,7 +17,6 @@
 #endif // MUNDANE_MESSAGES
 #else
 #pragma GCC error "ATTRIBUTES_ALLOWED macro bad value.\nValid values are 1 (allowed) or 0 (disallowed)"
-#undef HEADER_OKAY
 #endif // ATTRIBUTES_ALLOWED
 
 // makes common attributes easy to type out ig, might rework or delete this file tbh
