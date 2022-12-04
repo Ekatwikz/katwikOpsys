@@ -113,7 +113,7 @@ extern void myStackTracer(FILE* stream,
 // 700IQ setup for having macros with optional arguments
 // without simply using __VAR_ARGS__ lol
 // courtesy of stackoverflow.com/q/3046889
-#define ERR_0_ARGS() ERR_(LBLUE"Error Description"RESET_ESC,)
+#define ERR_0_ARGS() ERR_(LBLUE"Error Description" RESET_ESC,)
 #define ERR_1_ARG(source) ERR_(source,)
 #define ERR_2_ARGS(source, cleanup) ERR_(source, cleanup)
 #define ERR_X_ARGS(x, A, B, FUNC, ...) FUNC
@@ -147,7 +147,7 @@ extern void myStackTracer(FILE* stream,
 	exprVal;\
 }))
 #define DBGprintf(format, ...) (__extension__({\
-	int printfRet = ERR_NEG(printf(LRED_BLD_INV"DBG:" RESET_ESC" " INFO_FORMAT "\n" BWHITE format RESET_ESC\
+	int printfRet = ERR_NEG(printf(LBLUE_BLD_INV"DBG:" RESET_ESC" " INFO_FORMAT "\n" BWHITE format RESET_ESC\
 				, __FILE__, __LINE__, __func__,\
 				(long) getpid(), (long) getppid(), (long) pthread_self(), ##__VA_ARGS__));\
 	ERR_EOF(fflush(stdout));\
@@ -176,7 +176,7 @@ extern void myStackTracer(FILE* stream,
 	{ERR(LRED_BLD#condition RESET_ESC" ( " LBLUE#expr RESET_ESC" ) " RESET_ESC, ##__VA_ARGS__);}\
 } while (0)
 #define DBGprintf(format, ...) do {\
-	ERR_NEG(printf(LRED_BLD_INV"DBG:" RESET_ESC" " INFO_FORMAT "\n" BWHITE format RESET_ESC\
+	ERR_NEG(printf(LBLUE_BLD_INV"DBG:" RESET_ESC" " INFO_FORMAT "\n" BWHITE format RESET_ESC\
 				, __FILE__, __LINE__, __func__,\
 				(long) getpid(), (long) getppid(), (long) pthread_self(), ##__VA_ARGS__));\
 	ERR_EOF(fflush(stdout));\
@@ -217,6 +217,7 @@ extern void myStackTracer(FILE* stream,
 #define ERR_IN_ADDR_T(expr, ...) ERR_IF(expr, (in_addr_t) -1 ==, in_addr_t, ##__VA_ARGS__)
 #define ERR_BARRIER(expr, ...) ERR_IF(expr, PTHREAD_BARRIER_SERIAL_THREAD != exprVal && 0 !=, int, ##__VA_ARGS__)
 #define ERR_SEM(expr, ...) ERR_IF(expr, SEM_FAILED ==, sem_t, ##__VA_ARGS__)
+#define ERR_PID(expr, ...) ERR_IF(expr, (pid_t) -1 ==, pid_t, ##__VA_ARGS__)
 
 // versions that allow a single okay errno value:
 #define ERR_IF_(expr, condition, acceptableError, castType, ...) ERR_IF(expr, errno != acceptableError && condition, castType, ##__VA_ARGS__)
@@ -230,6 +231,7 @@ extern void myStackTracer(FILE* stream,
 #define ERR_IN_ADDR_T_(expr, acceptableError, ...) ERR_IF(expr, (in_addr_t) -1 ==, acceptableError, in_addr_t, ##__VA_ARGS__)
 #define ERR_BARRIER_(expr, ...) ERR_IF(expr, PTHREAD_BARRIER_SERIAL_THREAD != exprVal && 0 !=, acceptableError, int, ##__VA_ARGS__)
 #define ERR_SEM_(expr, acceptableError, ...) ERR_IF(expr, SEM_FAILED ==, acceptableError, sem_t, ##__VA_ARGS__)
+#define ERR_PID_(expr, ...) ERR_IF(expr, (pid_t) -1 ==, acceptableError, pid_t, ##__VA_ARGS__)
 
 // UGHHH YUCK GROSSS
 // TODO: make these names better
@@ -239,11 +241,13 @@ extern void myStackTracer(FILE* stream,
 #define CHECK_RETRY_MQ(expr, ...) CHECK_RETRY_BASE(expr, ERR_MQ, mqd_t, ##__VA_ARGS__)
 #define CHECK_RETRY_SSIZE_T(expr, ...) CHECK_RETRY_BASE(expr, ERR_SSIZE_T, ssize_t, ##__VA_ARGS__)
 #define CHECK_RETRY_EOF(expr, ...) CHECK_RETRY_BASE(expr, ERR_EOF, int, ##__VA_ARGS__)
+#define CHECK_RETRY_PID(expr, ...) CHECK_RETRY_BASE(expr, ERR_PID, pid_t, ##__VA_ARGS__)
 
 #define CHECK_RETRY_(expr, ...) CHECK_RETRY_BASE(expr, ERR_NEG1_, int, ##__VA_ARGS__)
 #define CHECK_RETRY_MQ_(expr, ...) CHECK_RETRY_BASE(expr, ERR_MQ_, mqd_t, ##__VA_ARGS__)
 #define CHECK_RETRY_SSIZE_T_(expr, ...) CHECK_RETRY_BASE(expr, ERR_SSIZE_T_, ssize_t, ##__VA_ARGS__)
 #define CHECK_RETRY_EOF_(expr, ...) CHECK_RETRY_BASE(expr, ERR_EOF_, int, ##__VA_ARGS__)
+#define CHECK_RETRY_PID_(expr, ...) CHECK_RETRY_BASE(expr, ERR_PID_, pid_t, ##__VA_ARGS__)
 // in theory there's more types to check but whoooooooo caaaaares
 
 #endif // ERROR_HELPERS_H

@@ -159,9 +159,9 @@ replaceBrace:
 	fprintf(stream,
 	", Top %d frames from top to bottom:\n", size);
 	EXEC_ONLY {
-		fprintf(stream, "A few line numbers could be iffy sometimes\n");
+		fprintf(stream, "A few line numbers could be iffy sometimes, +\n");
 	}
-	fprintf(stream, "+ god help you if this trace happens in multiple threads at once " BWHITE"\u2620" RESET_ESC"\n");
+	fprintf(stream, "god help you if this trace happens in multiple threads at once " BWHITE"\u2620" RESET_ESC"\n");
 
 	char line1[MAX_EXEC_LINE + 1], line2[MAX_EXEC_LINE + 1];
 	for (int i = 0, badTraceMessagePrinted = 0; i < size; ++i) {

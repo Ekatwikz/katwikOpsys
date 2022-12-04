@@ -143,6 +143,16 @@
 #define sem_destroy_(sem, ...)\
 	ERR_NEG1(sem_destroy(sem), ##__VA_ARGS__)
 
+// ops1lab2:
+#define fork_(...)\
+	CHECK_RETRY_PID(fork(), ##__VA_ARGS__)
+#define wait_(stat_loc, ...)\
+	CHECK_RETRY_PID(wait(stat_loc), ##__VA_ARGS__)
+#define waitpid_(pid, stat_loc, options, ...)\
+	CHECK_RETRY_PID(waitpid(pid, stat_loc, options), ##__VA_ARGS__)
+#define kill_(pid, sig, ...)\
+	ERR_NEG1(kill(pid, sig), ##__VA_ARGS__)
+
 #define pthread_setcancelstate_(state, oldstate, ...)\
 	ERR_NEG1(pthread_setcancelstate(state, oldstate), ##__VA_ARGS__)
 #define pthread_setcanceltype_(type, oldtype, ...)\
