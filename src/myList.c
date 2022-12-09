@@ -13,12 +13,11 @@ newMyNode (LIST_TYPE val) {
 MyList* MY_WARN_UNUSED
 newMyList (void) {
 	MyList* list;
-
-	// calloc to correctly set NULL pointers
 	ERR_NULL( list = calloc(1, sizeof(MyList)) );
 	return list;
 }
 
+// TODO: fix compile issue with EXTENSIONS_ALLOWED=0
 int MY_NON_NULL(1, 2) MY_FORMAT(printf, 2, 0)
 	printMyList(const MyList* const list, const char* restrict format) {
 		NON_ATTR_IF(!list) {
@@ -36,12 +35,7 @@ int MY_NON_NULL(1, 2) MY_FORMAT(printf, 2, 0)
 
 size_t MY_NON_NULL(1) MY_WARN_UNUSED
 myListLength(const MyList* const list) {
-	size_t length = 0;
-	for (MyNode* node = list->head; node; node = node->next) {
-		++length;
-	}
-
-	return length;
+	return list->size;
 }
 
 MyNode* MY_WARN_UNUSED MY_NON_NULL(1)
@@ -67,6 +61,10 @@ MyNode* MY_WARN_UNUSED MY_NON_NULL(1)
 		if (!node) {
 			return NULL;
 		}
+
+		// if we got this far, we'll actually pop
+		// so update size
+		list->size--;
 
 		// If there's a previous node relink, otherwise we're deleting the head node, so update that
 		prev ?
@@ -202,6 +200,7 @@ MyList* MY_NON_NULL(1)
 
 MyList* MY_NON_NULL(1, 3)
 	insertAfter(MyList* const list, size_t pos, MyNode* const newMyNode) {
+		list->size++;
 		MyNode *node = list->head;
 
 		for (size_t i = 0; i < pos; ++i) { // Find the node we're inserting after
@@ -221,6 +220,7 @@ MyList* MY_NON_NULL(1, 3)
 
 MyList* MY_NON_NULL(1, 3)
 	insertBefore(MyList* const list, size_t pos, MyNode* const newMyNode) {
+		list->size++;
 		MyNode *prev = NULL, *node = list->head;
 
 		for (size_t i = 0; i < pos; ++i) { // Find the node we're inserting before

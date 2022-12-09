@@ -1,6 +1,6 @@
 # base filenames go here
 # separate with spaces
-DEFAULTFILES:=lab4Pract strings
+DEFAULTFILES:=list
 
 # folder to submit to
 SUBMISSIONPATH:=../../testArea2
@@ -40,9 +40,9 @@ MUNDANE_MESSAGES:=0
 EXTENSIONS_ALLOWED:=1
 
 # objects and paths to use
-OWNLIBS:=errorHelpers easyCheck littleHelpers randAndSleep stringCrap
+OWNLIBS:=errorHelpers easyCheck littleHelpers randAndSleep stringCrap myList
 OWNLIBPATH=../..
-OWNLIBNAME=testNewName
+OWNLIBNAME=katwikOpsys
 OWNOBJFOLDER=obj
 OWNSRCFOLDER=src
 

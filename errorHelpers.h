@@ -207,6 +207,7 @@ extern void myStackTracer(FILE* stream,
 #define myRetry(expr, castType) TEMP_FAILURE_RETRY(expr)
 #endif // EXTENSIONS_ALLOWED
 
+// TODO: mayyybe consider typeof? lmao
 #define ERR_NEG1(expr, ...) ERR_IF(expr, -1 ==, int, ##__VA_ARGS__)
 #define ERR_NEG(expr, ...) ERR_IF(expr, 0 > , int, ##__VA_ARGS__)
 #define ERR_NON_ZERO(expr, ...) ERR_IF(expr, 0 !=, int, ##__VA_ARGS__)
