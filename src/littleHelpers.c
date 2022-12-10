@@ -22,3 +22,23 @@ void sethandler(void (*signalHandler) (int), int sigNo) {
 	action.sa_handler = signalHandler;
 	ERR_NEG1( sigaction(sigNo, &action, NULL) ); // TODO: change this
 }
+
+void MY_NON_NULL(1, 2)
+	swap_(void* restrict lhs, void* restrict rhs, size_t sz, void* restrict buffer) {
+		void* tmp;
+		if (buffer) {
+			// having this option might be useful for frequent swaps
+			tmp = buffer;
+		} else {
+			// but alloc a buffer if aren't given one
+			ERR_NULL(tmp = malloc(sz));
+		}
+
+		memcpy(tmp, lhs, sz);
+		memcpy(lhs, rhs, sz);
+		memcpy(rhs, tmp, sz);
+
+		if (!buffer) {
+			FREE(tmp);
+		}
+	}
