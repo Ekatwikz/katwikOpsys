@@ -13,19 +13,20 @@ newMyNode (LIST_TYPE val) {
 MyList* MY_WARN_UNUSED
 newMyList (void) {
 	MyList* list;
-
-	// calloc to correctly set NULL pointers
 	ERR_NULL( list = calloc(1, sizeof(MyList)) );
 	return list;
 }
 
+// TODO: fix compile issue with EXTENSIONS_ALLOWED=0
 int MY_NON_NULL(1, 2) MY_FORMAT(printf, 2, 0)
 	printMyList(const MyList* const list, const char* restrict format) {
 		NON_ATTR_IF(!list) {
 			DBGonly(reason "\n");
 		}
 
-        int totalPrinted = 0;
+		printf_("Head: %p\n", list->head);
+
+		int totalPrinted = 0;
 		for (MyNode* node = list->head; node; node = node->next) {
 			totalPrinted += printf_(format, node->val);
 		}
@@ -36,12 +37,7 @@ int MY_NON_NULL(1, 2) MY_FORMAT(printf, 2, 0)
 
 size_t MY_NON_NULL(1) MY_WARN_UNUSED
 myListLength(const MyList* const list) {
-	size_t length = 0;
-	for (MyNode* node = list->head; node; node = node->next) {
-		++length;
-	}
-
-	return length;
+	return list->size;
 }
 
 MyNode* MY_WARN_UNUSED MY_NON_NULL(1)
@@ -68,15 +64,14 @@ MyNode* MY_WARN_UNUSED MY_NON_NULL(1)
 			return NULL;
 		}
 
+		// if we got this far, we'll actually pop
+		// so update size
+		list->size--;
+
 		// If there's a previous node relink, otherwise we're deleting the head node, so update that
 		prev ?
 			(prev->next = node->next) :
 			(list->head = node->next);
-
-		// If we're deleting the tail node, update that
-		if (!node->next) {
-			list->tail = prev;
-		}
 
 		// clean up and return
 		node->next = NULL;
@@ -202,6 +197,7 @@ MyList* MY_NON_NULL(1)
 
 MyList* MY_NON_NULL(1, 3)
 	insertAfter(MyList* const list, size_t pos, MyNode* const newMyNode) {
+		list->size++;
 		MyNode *node = list->head;
 
 		for (size_t i = 0; i < pos; ++i) { // Find the node we're inserting after
@@ -212,7 +208,9 @@ MyList* MY_NON_NULL(1, 3)
 			}
 		}
 
-		node == list->tail ? (list->tail = newMyNode) : (newMyNode->next = node->next);
+		if (node) {
+			newMyNode->next = node->next;
+		}
 
 		// Be careful in case we insertAfter in an empty list
 		!node ? (list->head = newMyNode) : (node->next = newMyNode);
@@ -221,6 +219,7 @@ MyList* MY_NON_NULL(1, 3)
 
 MyList* MY_NON_NULL(1, 3)
 	insertBefore(MyList* const list, size_t pos, MyNode* const newMyNode) {
+		list->size++;
 		MyNode *prev = NULL, *node = list->head;
 
 		for (size_t i = 0; i < pos; ++i) { // Find the node we're inserting before
@@ -233,9 +232,7 @@ MyList* MY_NON_NULL(1, 3)
 		}
 
 		node == list->head ? (list->head = newMyNode) : (prev->next = newMyNode);
-
-		// Be careful in case we insertBefore in an empty list
-		!node ? (list->tail = newMyNode) : (newMyNode->next = node);
+		newMyNode->next = node;
 		return list;
 	}
 
@@ -270,4 +267,39 @@ MyList* MY_NON_NULL(1)
 MyList* MY_NON_NULL(1)
 	insertValFirst(MyList* const list, LIST_TYPE newVal) {
 		return insertFirst(list, newMyNode(newVal));
+	}
+
+bool MY_NON_NULL(1, 2)
+	compLessThan(const LIST_TYPE* const a, const LIST_TYPE* const b) {
+		return *a < *b;
+	}
+
+// simple enough bubble sort
+// TODO: consider doing swaps using only ->next ?
+MyList* MY_NON_NULL(1)
+	sortMyList_(MyList* list, bool (*comp)(const LIST_TYPE* const a, const LIST_TYPE* const b)) {
+		size_t sz = myListLength(list);
+
+		// don't sort trivially sorted lists xdd
+		if (sz < 2) {
+			return list;
+		}
+
+		LIST_TYPE tmp;
+		for (bool swapped = true; swapped;) {
+			MyNode *a = list->head, *b = a->next;
+			swapped = false;
+
+			for (size_t i = 1; i < sz; ++i) {
+				if (comp(&b->val, &a->val)) {
+					swap(&a->val, &b->val, sizeof(LIST_TYPE), &tmp);
+					swapped = true;
+				}
+
+				a = b;
+				b = b->next;
+			}
+		}
+
+		return list;
 	}

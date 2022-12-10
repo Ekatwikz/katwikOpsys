@@ -5,6 +5,7 @@
 #include "easyAttr.h"
 #include "errorHelpers.h"
 #include "easyCheck.h"
+#include "littleHelpers.h"
 
 // lol these List methods are just a slightly upgraded version from
 // my Sem1 early exam prep
@@ -21,8 +22,8 @@ typedef struct MyNode_ {
 } MyNode;
 
 typedef struct MyList_ {
-	MyNode *head,
-	       *tail; // remove me
+	MyNode *head;
+	size_t size; // number of nodes
 } MyList;
 
 extern MyNode* MY_WARN_UNUSED
@@ -105,5 +106,18 @@ extern MyList* MY_NON_NULL(1)
 
 extern MyList* MY_NON_NULL(1)
 	insertValFirst(MyList* const list, LIST_TYPE newVal);
+
+extern bool MY_NON_NULL(1, 2)
+	compLessThan(const LIST_TYPE* const a, const LIST_TYPE* const b);
+
+extern MyList* MY_NON_NULL(1)
+	sortMyList_(MyList* const list, bool (*comp)(const LIST_TYPE* const a, const LIST_TYPE* const b));
+#define sortMyList_1_ARG(list) sortMyList_(list, compLessThan)
+#define sortMyList_2_ARGS(list, comp) sortMyList_(list, comp)
+#define sortMyList_X_ARGS(x, A, B, FUNC, ...) FUNC
+#define sortMyList(...) sortMyList_X_ARGS(, ##__VA_ARGS__,\
+	sortMyList_2_ARGS(__VA_ARGS__),\
+	sortMyList_1_ARG(__VA_ARGS__),\
+	sortMyList_0_ARGS(__VA_ARGS__)) // Wimplicit-function-declaration
 
 #endif // MY_LIST_H
