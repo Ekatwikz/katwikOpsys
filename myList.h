@@ -23,6 +23,7 @@ typedef struct MyNode_ {
 typedef struct MyList_ {
 	MyNode *head,
 	       *tail; // remove me
+	size_t size; // number of nodes
 } MyList;
 
 extern MyNode* MY_WARN_UNUSED
