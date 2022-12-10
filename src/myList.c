@@ -24,7 +24,9 @@ int MY_NON_NULL(1, 2) MY_FORMAT(printf, 2, 0)
 			DBGonly(reason "\n");
 		}
 
-        int totalPrinted = 0;
+		printf_("Head: %p\n", list->head);
+
+		int totalPrinted = 0;
 		for (MyNode* node = list->head; node; node = node->next) {
 			totalPrinted += printf_(format, node->val);
 		}
@@ -70,11 +72,6 @@ MyNode* MY_WARN_UNUSED MY_NON_NULL(1)
 		prev ?
 			(prev->next = node->next) :
 			(list->head = node->next);
-
-		// If we're deleting the tail node, update that
-		if (!node->next) {
-			list->tail = prev;
-		}
 
 		// clean up and return
 		node->next = NULL;
@@ -211,7 +208,9 @@ MyList* MY_NON_NULL(1, 3)
 			}
 		}
 
-		node == list->tail ? (list->tail = newMyNode) : (newMyNode->next = node->next);
+		if (node) {
+			newMyNode->next = node->next;
+		}
 
 		// Be careful in case we insertAfter in an empty list
 		!node ? (list->head = newMyNode) : (node->next = newMyNode);
@@ -233,9 +232,7 @@ MyList* MY_NON_NULL(1, 3)
 		}
 
 		node == list->head ? (list->head = newMyNode) : (prev->next = newMyNode);
-
-		// Be careful in case we insertBefore in an empty list
-		!node ? (list->tail = newMyNode) : (newMyNode->next = node);
+		newMyNode->next = node;
 		return list;
 	}
 
@@ -270,4 +267,39 @@ MyList* MY_NON_NULL(1)
 MyList* MY_NON_NULL(1)
 	insertValFirst(MyList* const list, LIST_TYPE newVal) {
 		return insertFirst(list, newMyNode(newVal));
+	}
+
+bool MY_NON_NULL(1, 2)
+	compLessThan(const LIST_TYPE* const a, const LIST_TYPE* const b) {
+		return *a < *b;
+	}
+
+// simple enough bubble sort
+// TODO: consider doing swaps using only ->next ?
+MyList* MY_NON_NULL(1)
+	sortMyList_(MyList* list, bool (*comp)(const LIST_TYPE* const a, const LIST_TYPE* const b)) {
+		size_t sz = myListLength(list);
+
+		// don't sort trivially sorted lists xdd
+		if (sz < 2) {
+			return list;
+		}
+
+		LIST_TYPE tmp;
+		for (bool swapped = true; swapped;) {
+			MyNode *a = list->head, *b = a->next;
+			swapped = false;
+
+			for (size_t i = 1; i < sz; ++i) {
+				if (comp(&b->val, &a->val)) {
+					swap(&a->val, &b->val, sizeof(LIST_TYPE), &tmp);
+					swapped = true;
+				}
+
+				a = b;
+				b = b->next;
+			}
+		}
+
+		return list;
 	}
