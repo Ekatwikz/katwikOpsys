@@ -27,7 +27,10 @@
 // randomizer, sleepers and random-sleepers lol
 #include "randAndSleep.h"
 
-// stuff to kill off
-#include "ancientCrap.h"
+// aio stuff
+#include "aioHelpers.h"
+
+// net stuff
+#include "netHelpers.h"
 
 #endif // KATWIK_OPSYS_H

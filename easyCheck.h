@@ -158,9 +158,31 @@
 #define pthread_setcanceltype_(type, oldtype, ...)\
 	ERR_NEG1(pthread_setcanceltype(type, oldtype), ##__VA_ARGS__)
 
+// aio stuff:
+#define aio_read_(aiocbp, ...)\
+	ERR_NEG1(aio_read(aiocbp), ##__VA_ARGS__)
+#define aio_write_(aiocbp, ...)\
+	ERR_NEG1(aio_write(aiocbp), ##__VA_ARGS__)
+#define aio_fsync_(op, aiocbp, ...)\
+	ERR_NEG1(aio_fsync(op, aiocbp), ##__VA_ARGS__)
+#define aio_error_(aiocbp, ...)\
+	ERR_NEG1(aio_error(aiocbp), ##__VA_ARGS__)
+#define aio_return_(aiocbp, ...)\
+	ERR_SSIZE_T(aio_return(aiocbp), ##__VA_ARGS__)
+#define aio_suspend_(list, nent, timeout, ...)\
+	CHECK_RETRY_(aio_suspend(list, nent, timeout) , EINTR, ##__VA_ARGS__)
+#define aio_cancel_(fildes, cbp, ...)\
+	ERR_NEG1(aio_cancel(fildes, cbp), ##__VA_ARGS__)
+
 // extra:
 #define open_(path, oflag, ...)\
 	CHECK_RETRY(open(path, oflag, ##__VA_ARGS__))
+
+// TODO: version that returns on stack?
+#define fstat_(fildes, buf, ...)\
+	ERR_NEG1(fstat(fildes, buf), ##__VA_ARGS__)
+#define fsync_(fildes, ...)\
+	CHECK_RETRY(fsync(fildes), ##__VA_ARGS__)
 
 extern sigset_t MY_WARN_UNUSED
 	make_sigset_t_(int signo);
