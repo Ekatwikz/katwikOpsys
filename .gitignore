@@ -7,3 +7,7 @@
 
 # vs
 /.vscode
+
+# clang stuffs
+compile_commands.json
+.cache

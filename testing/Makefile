@@ -1,6 +1,6 @@
 # base filenames go here
 # separate with spaces
-DEFAULTFILES:=lab4Pract strings
+DEFAULTFILES:=gpiod_tinytest strings
 
 # folder to submit to
 SUBMISSIONPATH:=../../testArea2
@@ -8,7 +8,7 @@ SUBMISSIONPATH:=../../testArea2
 # 1 for ez compile,
 # 0 to see a few more warnings,
 # -1 if you you're a perfectionist
-FEELINGLAZY:=-1
+FEELINGLAZY:=0
 
 # 1 for multi-process programs
 # 0 for single process programs
@@ -65,15 +65,15 @@ else
 endif
 
 ifeq ($(USECOLOR), 1)
-	BLACK		:= $(shell tput -Txterm setaf 0)
-	RED		:= $(shell tput -Txterm setaf 1)
-	GREEN		:= $(shell tput -Txterm setaf 2)
-	YELLOW		:= $(shell tput -Txterm setaf 3)
-	LIGHTPURPLE	:= $(shell tput -Txterm setaf 4)
-	PURPLE		:= $(shell tput -Txterm setaf 5)
-	BLUE		:= $(shell tput -Txterm setaf 6)
-	WHITE		:= $(shell tput -Txterm setaf 7)
-	RESET		:= $(shell tput -Txterm sgr0)
+	BLACK		:= $(shell tput -Txterm setaf 0 2>/dev/null)
+	RED		:= $(shell tput -Txterm setaf 1 2>/dev/null)
+	GREEN		:= $(shell tput -Txterm setaf 2 2>/dev/null)
+	YELLOW		:= $(shell tput -Txterm setaf 3 2>/dev/null)
+	LIGHTPURPLE	:= $(shell tput -Txterm setaf 4 2>/dev/null)
+	PURPLE		:= $(shell tput -Txterm setaf 5 2>/dev/null)
+	BLUE		:= $(shell tput -Txterm setaf 6 2>/dev/null)
+	WHITE		:= $(shell tput -Txterm setaf 7 2>/dev/null)
+	RESET		:= $(shell tput -Txterm sgr0 2>/dev/null)
 else
 	BLACK		:= ""
 	RED		:= ""
@@ -107,9 +107,8 @@ PREDEFINES+=-D 'EXTENSIONS_ALLOWED=$(EXTENSIONS_ALLOWED)'
 
 COMPILEMSG="$(BLUE)=== $(GREEN)$<$(BLUE) -> $(GREEN)$@ $(BLUE)===$(RESET)\n"
 
-CC=gcc
 CFLAGS=$(WARNINGS:%=-W%) $(FFLAGS:%=-f%) $(DEBUGFLAGS)
-LDFLAGS=$(SYSLIBS:%=-l%)
+LDFLAGS=$(SYSLIBS:%=-l%) $(CUSTOMLD:%=-L%)
 
 .PHONY: clean clear all zip submit
 
@@ -118,12 +117,12 @@ all: $(SHOULDCLEAN) $(SHOULDCLEAR) $(DEFAULTFILES)
 $(OBJPATH)/%.o: $(SRCPATH)/%.c $(HDRPATH)/%.h
 	@mkdir -pv $(OBJPATH)
 	@printf $(COMPILEMSG)
-	@$(CC) $(HDRPATH:%=-I %) $(CFLAGS) $(PREDEFINES) -c $< -o $@ $(LDFLAGS)
+	@$(CC) $(HDRPATH:%=-I%) $(CUSTOMINCLUDE:%=-I%) $(CFLAGS) $(PREDEFINES) -c $< -o $@ $(LDFLAGS)
 
 $(DEFAULTFILES): $(DEFAULTFILES:%=%.c) $(OWNOBJS)
 %: %.c $(OWNOBJS)
 	@printf $(COMPILEMSG)
-	-@$(CC) $(HDRPATH:%=-I %) $(CFLAGS) $(PREDEFINES) $(OWNOBJS) $< -o $@ $(LDFLAGS)
+	-@$(CC) $(HDRPATH:%=-I%) $(CUSTOMINCLUDE:%=-I%) $(CFLAGS) $(PREDEFINES) $(OWNOBJS) $< -o $@ $(LDFLAGS)
 
 clean:
 ifeq ($(AUTOCLEANMSGQUEUES), 1)
@@ -138,7 +137,7 @@ endif
 	-@rm -fv $(DEFAULTFILES)
 
 clear:
-	@clear
+	@clear || printf "[Couldn't clear screen, pretend it worked xdd]\n" # No really this happens lol
 
 zip: $(DEFAULTFILES:%=%.c)
 	-@rm -v $(USER).tar.bz2

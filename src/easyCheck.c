@@ -50,11 +50,7 @@ make_sem_t_(int pshared, unsigned value) {
 
 int MY_NON_NULL(2)
 	read_(int fildes, void* buf, size_t nbyte) {
-		int returnState = -1
-#if DEBUG_MODE
-			, i = 0
-#endif // DEBUG_MODE
-			; 
+		int returnState;
 
 		do {
 			// error check except EINTR:
@@ -66,11 +62,7 @@ int MY_NON_NULL(2)
 
 int MY_NON_NULL(2)
 	write_(int fildes, void* buf, size_t nbyte) {
-		int returnState = -1
-#if DEBUG_MODE
-			, i = 0
-#endif // DEBUG_MODE
-			; 
+		int returnState;
 
 		do {
 			// error check except EINTR:

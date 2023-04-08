@@ -10,6 +10,7 @@
 #pragma GCC error "MUNDANE_MESSAGES macro bad values.\nValid values are 0 (off) or 1 (on)"
 #endif // MUNDANE_MESSAGES
 
+// TODO: remove option, it's dumb
 // 1 for moar info, 0 normally
 #ifndef DEBUG_MODE
 #define DEBUG_MODE 0
